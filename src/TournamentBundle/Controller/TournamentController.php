@@ -24,11 +24,17 @@ class TournamentController extends Controller
      */
     public function showTournamentAction($id)
     {
-        $repository = $this->getDoctrine()
+        $tournamentRepository = $this->getDoctrine()
             ->getRepository('TournamentBundle:Tournament');
-        $tournament = $repository->find($id);
+        $tournament = $tournamentRepository->find($id);
+
+        $participationRepository = $this->getDoctrine()
+            ->getRepository('TournamentBundle:Participation');
+        $participations = $participationRepository->findBy(array('tournament' => $id));
+
         return $this->render('TournamentBundle:Tournament:show_tournament.html.twig', array(
             'tournament' => $tournament,
+            'participations' => $participations,
         ));
     }
 

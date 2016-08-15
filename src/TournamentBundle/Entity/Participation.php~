@@ -1,0 +1,49 @@
+<?php
+
+namespace TournamentBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Participation
+ *
+ * @ORM\Table(name="participations")
+ * @ORM\Entity
+ */
+class Participation
+{
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="license", type="string", length=50, unique=true)
+     */
+    private $license;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ranking", type="integer")
+     */
+    private $ranking;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="TournamentBundle\Entity\Tournament")
+     * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
+     */
+    private $tournament;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+}

@@ -47,6 +47,10 @@
             src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAWtgW_VmMX6ped_462ggkMjX2XzZuKd6M
     &q={{ tournament.city }},{{ tournament.street }}">
     </iframe>
+
+    {% for participation in participations %}
+        {{ participation.user.fullname }}<br>
+    {% endfor %}
 </div>
 
 {% endblock %}
