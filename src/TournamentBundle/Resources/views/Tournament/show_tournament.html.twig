@@ -1,0 +1,53 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{% endblock %}
+
+{% block body %}
+<div>
+<h1 style="display: inline-block">{{ tournament.name }}</h1>
+    <button class="w3-btn w3-ripple w3-right w3-green" style="margin: 20px 0 0 20px">Dołącz</button>
+    <a href = "{{ path('edit_tournament', { 'id': tournament.id }) }}" >
+        <button class="w3-btn w3-ripple w3-right w3-amber" style="margin-top: 20px">&#9998; Edytuj</button>
+    </a>
+</div>
+
+<div class="w3-main">
+    <div class="w3-row w3-margin-bottom">
+        <div class="w3-col l7" style="padding:3%; text-align: left">
+            <table>
+                <tbody>
+                <tr> <th style="width: 180px">Dyscyplina:</th>       <td>{{ tournament.discipline.name }}</td>       </tr>
+                <tr> <th>Data turnieju:</th>        <td>{{ tournament.tournamentDate |date ('d-m-Y') }}</td>            </tr>
+                <tr> <th>Limit uczestników: </th>   <td>{{ tournament.participantsLimit }}</td>     </tr>
+                <tr> <th>Rejestracja do:</th>       <td>{{ tournament.registrationEndDate|date ('d-m-Y') }}</td>        </tr>
+                <tr> <th>Miasto:</th>               <td>{{ tournament.city }}</td>                  </tr>
+                <tr> <th>Ulica:</th>                <td>{{ tournament.street }}</td>                </tr>
+                <tr> <th>Opis:</th>                 <td>{{ tournament.description }}</td>           </tr>
+                </tbody>
+            </table>
+        </div>
+        {% if tournament.sponsorLogoPaths != null %}
+        <div class="w3-col l5" style="padding:3%;">
+            <div class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
+                <h5>Sponsorzy:</h5>
+                {% for path in tournament.sponsorLogoPaths %}
+                    <img src="/uploads/{{ path }}" height="150px"/>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <button class="w3-btn w3-ripple">Mapa</button>
+    <button class="w3-btn w3-ripple">Uczestnicy</button>
+    <button class="w3-btn w3-ripple">Drabinka</button>
+    <br> <br> <br>
+    <iframe
+            frameborder="0"
+            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAWtgW_VmMX6ped_462ggkMjX2XzZuKd6M
+    &q={{ tournament.city }},{{ tournament.street }}">
+    </iframe>
+</div>
+
+{% endblock %}
+

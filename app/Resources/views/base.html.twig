@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title style="clear: none">{% block title %}Welcome!{% endblock %}</title>
+    {% block stylesheets %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href={{ asset('bundles/framework/css/w3.css') }}>
+    {% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+</head>
+
+    <body style="margin: 0 20px 0 20px">
+<!-- HEADER -->
+    <div class="w3-row w3-white w3-hide-medium w3-hide-small">
+        <div class="w3-half" style="margin:4px 0 6px 0"><a class="w3schools-logo" href="http://127.0.0.1:8000/">
+                <img src="{{ asset('bundles/framework/images/logo.gif') }}" height="100px" />TURNIEJOWO.pl
+            </a></div>
+        <div class="w3-half w3-margin-top w3-wide w3-hide-medium w3-hide-small">
+            <div class="w3-right" style="position:relative; top:70px;">THE WORLD'S LARGEST WEB TOURNAMENT SITE</div>
+        </div>
+    </div>
+<!-- MENU -->
+    <ul class="w3-navbar w3-theme w3-card-2 w3-wide">
+        <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="{{ path('list_tournament') }}">Turnieje</a></li>
+        <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="#">####</a></li>
+
+        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="#">Rejestracja</a></li>
+        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="#">Logowanie</a></li>
+    </ul>
+<!-- CONTENT -->
+    <div>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </div>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}TournamentBundle:Tournament:listTournament{% endblock %}
+
+{% block body %}
+
+<h1>Play a game!</h1>
+
+    <table class="w3-table w3-bordered w3-striped" data-toggle="table" data-search="true">
+        <tr>
+            <th>Name</th>
+            <th>Discipline</th>
+            <th>Organizer</th>
+            <th>Date</th>
+            <th>Localization</th>
+            <th>Actions</th>
+        </tr>
+        {% for tournament in tournaments %}
+        <tr>
+            <td>{{ tournament.name }}</td>
+            <td>{{ tournament.discipline.name }}</td>
+            <td>{{ tournament.organizer.fullname }}</td>
+            <td>{{ tournament.tournamentDate |date('d-m-Y') }}</td>
+            <td>{{ tournament.city }}, {{ tournament.street }}</td>
+            <td>
+                <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" >
+                    <button class="w3-btn w3-ripple">&#9998; Show</button>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
