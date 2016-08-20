@@ -3,10 +3,20 @@
 {% block title %}TournamentBundle:Tournament:editTournament{% endblock %}
 
 {% block body %}
-<h1>Edytuj</h1>
     {#{{ form(form) }}#}
+
     {{ form_start(edit_form) }}
+    <h3>Edytuj turniej</h3>
     {{ form_widget(edit_form) }}
+    <input type="submit" class="btn btn-primary" value="Edit" />
     <a href="{{ path('list_tournament') }}" class="btn btn-primary">Back to the list</a>
     {{ form_end(edit_form) }}
+
+
+    {#{% block integer_widget %}#}
+    {#{{ form_start(edit_form) }}#}
+    {#{{ form_widget(edit_form) }}#}
+    {#<a href="{{ path('list_tournament') }}" class="btn btn-primary">Back to the list</a>#}
+    {#{{ form_end(edit_form) }}#}
+    {#{% endblock %}#}
 {% endblock %}

@@ -1,6 +1,6 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX{% endblock %}
+{% block title %}turniejowo.pl - {{ tournament.name }}{% endblock %}
 
 {% block body %}
 <div>
@@ -42,7 +42,7 @@
     <button class="w3-btn w3-ripple">Uczestnicy</button>
     <button class="w3-btn w3-ripple">Drabinka</button>
     <br> <br> <br>
-    <iframe
+    <iframe ng-show="false"
             frameborder="0"
             src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAWtgW_VmMX6ped_462ggkMjX2XzZuKd6M
     &q={{ tournament.city }},{{ tournament.street }}">

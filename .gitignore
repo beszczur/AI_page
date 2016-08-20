@@ -13,7 +13,8 @@
 !var/sessions/.gitkeep
 !var/SymfonyRequirements.php
 /vendor/
-/web/bundles/
 .idea/workspace.xml
 .gitignore~
+
+
 

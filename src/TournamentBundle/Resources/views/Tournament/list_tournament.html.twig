@@ -6,12 +6,12 @@
 
     <table class="w3-table w3-bordered w3-striped" data-toggle="table" data-search="true">
         <tr>
-            <th>Name</th>
-            <th>Discipline</th>
-            <th>Organizer</th>
-            <th>Date</th>
-            <th>Localization</th>
-            <th>Actions</th>
+            <th>Nazwa</th>
+            <th>Dyscyplina</th>
+            <th>Organizator</th>
+            <th>Data</th>
+            <th>Miejsce</th>
+            <th>Akcje</th>
         </tr>
         {% for tournament in tournaments %}
         <tr>
@@ -22,7 +22,10 @@
             <td>{{ tournament.city }}, {{ tournament.street }}</td>
             <td>
                 <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" >
-                    <button class="w3-btn w3-ripple">&#9998; Show</button>
+                    <button class="w3-btn w3-ripple">&#9998; Wyświetl</button>
+                </a>
+                <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" >
+                    <button class="w3-btn w3-ripple">&#9998; Dołącz</button>
                 </a>
             </td>
         </tr>

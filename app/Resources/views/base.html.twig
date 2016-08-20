@@ -5,7 +5,10 @@
     <title style="clear: none">{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href={{ asset('bundles/framework/js/angular.min.js') }}>
+        <link rel="stylesheet" href={{ asset('bundles/framework/css/bootstrap.min.css') }}>
         <link rel="stylesheet" href={{ asset('bundles/framework/css/w3.css') }}>
+        <link rel="stylesheet" href={{ asset('bundles/framework/css/my_style.css') }}>
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
@@ -14,11 +17,11 @@
     <body style="margin: 0 20px 0 20px">
 <!-- HEADER -->
     <div class="w3-row w3-white w3-hide-medium w3-hide-small">
-        <div class="w3-half" style="margin:4px 0 6px 0"><a class="w3schools-logo" href="http://127.0.0.1:8000/">
+        <div class="w3-third" style="margin:4px 0 6px 0"><a class="w3schools-logo" href="http://127.0.0.1:8000/">
                 <img src="{{ asset('bundles/framework/images/logo.gif') }}" height="100px" />TURNIEJOWO.pl
             </a></div>
-        <div class="w3-half w3-margin-top w3-wide w3-hide-medium w3-hide-small">
-            <div class="w3-right" style="position:relative; top:70px;">THE WORLD'S LARGEST WEB TOURNAMENT SITE</div>
+        <div class="w3-twothird w3-margin-top w3-wide w3-hide-medium w3-hide-small">
+            <div class="w3-right w3-text-amber" style="position: relative; top:60px">THE WORLD'S LARGEST WEB TOURNAMENT SITE</div>
         </div>
     </div>
 <!-- MENU -->
