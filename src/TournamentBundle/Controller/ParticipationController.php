@@ -5,18 +5,24 @@ namespace TournamentBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use TournamentBundle\Entity\Participation;
 
 class ParticipationController extends Controller
 {
     /**
-     * @Route("/participate", name="participate_in")
+     * @Route("/participate/{id}", name="participate_in")
      * @param Request $request
-     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function participateInAction(Request $request)
+    public function participateInAction($id, Request $request)
     {
+        $repository = $this->getDoctrine()
+            ->getRepository('TournamentBundle:Participation');
+
+        $participation = new Participation();
+        $form = $this->createForm('TournamentBundle\Form\Type\ParticipationType', $participation);
+
         return $this->render('TournamentBundle:Participation:participate_in.html.twig', array(
-            // ...
+            'form' => $form->createView(),
         ));
     }
 

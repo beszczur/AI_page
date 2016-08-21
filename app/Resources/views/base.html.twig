@@ -5,7 +5,9 @@
     <title style="clear: none">{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <link rel="stylesheet" href={{ asset('js/angular.min.js') }}>
+        {#<link rel="script" href={{ asset('js/angular.min.js') }}>#}
+        {#<link rel="script" href={{ asset('js/jquery.min.js') }}>#}
+        {#<link rel="script" href={{ asset('js/jbootstrap.min.js') }}>#}
         <link rel="stylesheet" href={{ asset('css/bootstrap.min.css') }}>
         <link rel="stylesheet" href={{ asset('css/w3.css') }}>
         <link rel="stylesheet" href={{ asset('css/my_style.css') }}>
@@ -28,10 +30,10 @@
         <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="{{ path('list_tournament') }}">Turnieje</a></li>
         <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="#">####</a></li>
 
-        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="#">Rejestracja</a></li>
+        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="{{ path('register_page') }}">Rejestracja</a></li>
         <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="#">Logowanie</a></li>
         <li class="w3-amber w3-right" style="border-radius: 5px; height: 38px; margin: 9px 9px 5px 9px;">
-            <a class="w3-padding-10 w3-hover-green" href="#">+ Dodaj</a>
+            <a class="w3-padding-10 w3-hover-green" href="{{ path('add_tournament') }}">+ Dodaj</a>
         </li>
     </ul>
 <!-- CONTENT -->
@@ -39,5 +41,8 @@
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </div>
+            <script src="{{ asset('js/jquery.min.js') }}"></script>
+            <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('js/angular.min.js') }}"></script>
     </body>
 </html>

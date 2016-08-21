@@ -1,22 +1,14 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}TournamentBundle:Tournament:editTournament{% endblock %}
+{% block title %}turniejowo.pl - Edytuj{% endblock %}
 
 {% block body %}
-    {#{{ form(form) }}#}
 
     {{ form_start(edit_form) }}
     <h3>Edytuj turniej</h3>
     {{ form_widget(edit_form) }}
-    <input type="submit" class="btn btn-primary" value="Edit" />
-    <a href="{{ path('list_tournament') }}" class="btn btn-primary">Back to the list</a>
+    <input type="submit" class="w3-btn w3-ripple w3-green" value="Edytuj" />
+    {#<a href="{{ path('show_tournament', { 'id': edit_form.id }) }}" class="w3-btn w3-ripple w3-amber">Wróć do wydarzenia</a>#}
     {{ form_end(edit_form) }}
 
-
-    {#{% block integer_widget %}#}
-    {#{{ form_start(edit_form) }}#}
-    {#{{ form_widget(edit_form) }}#}
-    {#<a href="{{ path('list_tournament') }}" class="btn btn-primary">Back to the list</a>#}
-    {#{{ form_end(edit_form) }}#}
-    {#{% endblock %}#}
 {% endblock %}

@@ -3,6 +3,9 @@
 {% block title %}RegisterBundle:Register:register{% endblock %}
 
 {% block body %}
-<h1>Welcome to the Register:register page</h1>
-    {{ form(form) }}
+    {{ form_start(form) }}
+    <h3>Rejestracja</h3>
+    {{ form_widget(form) }}
+    <input type="submit" class="w3-btn w3-ripple w3-green" value="Zarejestruj" />
+    {{ form_end(form) }}
 {% endblock %}

@@ -65,7 +65,7 @@ class Tournament
      */
     private $organizer;
     /**
-     * @ORM\OneToOne(targetEntity="TournamentBundle\Entity\Discipline")
+     * @ORM\ManyToOne(targetEntity="TournamentBundle\Entity\Discipline", inversedBy="tournaments")
      * @ORM\JoinColumn(name="discipline_id", referencedColumnName="id")
      */
     private $discipline;
@@ -114,7 +114,7 @@ class Tournament
      *
      * @return Tournament
      */
-    public function setTournamentDate(\day $tournamentDate)
+    public function setTournamentDate(\DateTime $tournamentDate = null)
     {
         $this->tournamentDate = $tournamentDate;
 
@@ -282,7 +282,7 @@ class Tournament
      *
      * @return Tournament
      */
-    public function setRegistrationEndDate($registrationEndDate)
+    public function setRegistrationEndDate(\DateTime $registrationEndDate = null)
     {
         $this->registrationEndDate = $registrationEndDate;
 

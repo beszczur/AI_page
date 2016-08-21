@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RegisterController extends Controller
 {
     /**
-     * @Route("/register")
+     * @Route("/register", name="register_page")
      * @Method({"GET", "POST"})
      */
     public function registerAction(Request $request)
@@ -29,7 +29,6 @@ class RegisterController extends Controller
                 'choices' => array('Female' => 'F', 'Male' => 'M')))
             ->add('email', EmailType::class)
             ->add('password', TextType::class)
-            ->add('register', SubmitType::class, array('label' => 'Register'))
             ->getForm();
 
         $form->handleRequest($request);
