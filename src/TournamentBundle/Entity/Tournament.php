@@ -69,6 +69,10 @@ class Tournament
      * @ORM\JoinColumn(name="discipline_id", referencedColumnName="id")
      */
     private $discipline;
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Participation", mappedBy="tournament")
+     */
+    private $participants;
 
     private $files;
 
@@ -358,17 +362,18 @@ class Tournament
     public function upload()
     {
         $this->paths = array();
-        foreach($this->files as $file)
+        if(!empty($this->files))
         {
-            if($file != null)
+            foreach($this->files as $file)
             {
-                $path = sha1(uniqid(mt_rand(), true)).'.'.$file->guessExtension();
-                array_push ($this->sponsorLogoPaths, $path);
-                $file->move($this->getUploadRootDir(), $path);
+                if($file != null)
+                {
+                    $path = sha1(uniqid(mt_rand(), true)).'.'.$file->guessExtension();
+                    array_push ($this->sponsorLogoPaths, $path);
+                    $file->move($this->getUploadRootDir(), $path);
+                }
+                unset($file);
             }
-
-
-            unset($file);
         }
     }
 
@@ -410,4 +415,38 @@ class Tournament
         return 'uploads';
     }
 
+
+    /**
+     * Add participant
+     *
+     * @param \TournamentBundle\Entity\Participation $participant
+     *
+     * @return Tournament
+     */
+    public function addParticipant(\TournamentBundle\Entity\Participation $participant)
+    {
+        $this->participants[] = $participant;
+
+        return $this;
+    }
+
+    /**
+     * Remove participant
+     *
+     * @param \TournamentBundle\Entity\Participation $participant
+     */
+    public function removeParticipant(\TournamentBundle\Entity\Participation $participant)
+    {
+        $this->participants->removeElement($participant);
+    }
+
+    /**
+     * Get participants
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
 }

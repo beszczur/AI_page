@@ -43,5 +43,5 @@ security:
         - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/list, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/show, role: ROLE_USER }
+        - { path: ^/show, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/participate, role: ROLE_USER }

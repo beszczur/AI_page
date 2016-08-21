@@ -23,10 +23,11 @@ class TournamentController extends Controller
             ->getRepository('TournamentBundle:Participation');
         $participations = $participationRepository->findBy(array('tournament' => $id));
 
-        return $this->render('TournamentBundle:Tournament:show_tournament.html.twig', array(
-            'tournament' => $tournament,
+        return $this->render('TournamentBundle:Tournament:show_tournament.html.twig', [
+            'tournament'     => $tournament,
             'participations' => $participations,
-        ));
+            'user_id'        => $this->getUserId(),
+        ]);
     }
 
     /**
@@ -58,6 +59,7 @@ class TournamentController extends Controller
 
         return $this->render('TournamentBundle:Tournament:edit_tournament.html.twig', array(
             'edit_form' => $form->createView(),
+            'id'        => $tournament->getId(),
         ));
     }
 
@@ -72,6 +74,31 @@ class TournamentController extends Controller
 
         return $this->render('TournamentBundle:Tournament:list_tournament.html.twig', array(
             "tournaments" => $tournaments,
+            "user_id"     => $this->getUserId(),
+        ));
+    }
+
+    /**
+     * @Route("/mytournaments", name="my_tournaments")
+     */
+    public function myTournamentsAction()
+    {
+        $tournamentRepository = $this->getDoctrine()
+            ->getRepository('TournamentBundle:Tournament');
+
+        $tournaments = $tournamentRepository->findAll();
+        $my_tournaments = array();
+        foreach ($tournaments as $tournament)
+        {
+            if($this->isOrganizer($tournament) || $this->isParticipant($tournament))
+            {
+                $my_tournaments [] = $tournament;
+            }
+        }
+
+        return $this->render('TournamentBundle:Tournament:my_tournaments.html.twig', array(
+            "tournaments" => $my_tournaments,
+            "user_id"     => $this->getUserId(),
         ));
     }
 
@@ -107,4 +134,43 @@ class TournamentController extends Controller
             'form' => $form->createView(),
         ));
     }
+
+    private function getUserId()
+    {
+        if($this->getUser() == null)
+        {
+           return 0;
+        }
+        else
+        {
+            return $this->getUser()->getId();
+        }
+    }
+
+    /**
+     * @param $tournament
+     * @return bool
+     */
+    private function isOrganizer($tournament){
+        return $tournament->getOrganizer()->getId() == $this->getUser()->getId();
+    }
+
+    /**
+     * @param $tournament
+     * @return bool
+     */
+    private function isParticipant($tournament){
+
+        $participationRepository = $this->getDoctrine()
+            ->getRepository('TournamentBundle:Participation');
+
+        $paticipations = $participationRepository->findBy([
+            'user'       => $this->getUser()->getId(),
+            'tournament' => $tournament->getId()
+        ]);
+
+        return $paticipations != null;
+    }
 }
+
+

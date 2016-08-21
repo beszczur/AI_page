@@ -4,6 +4,7 @@
 
 {% block body %}
     <br>
+    <h3>Nadchodzące turnieje</h3>
     <table class="w3-table w3-bordered w3-striped" data-toggle="table" data-search="true">
         <tr>
             <th>Nazwa</th>
@@ -20,10 +21,11 @@
             <td>{{ tournament.organizer.fullname }}</td>
             <td>{{ tournament.tournamentDate |date('d-m-Y') }}</td>
             <td>{{ tournament.city }}, {{ tournament.street }}</td>
-            <td>
+            <td class="w3-right">
                 <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple">&#9998; Wyświetl</button></a>
-                <a href = "{{ path('participate_in',  { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple w3-green">&#9998; Dołącz</button></a>
-                <a href = "{{ path('edit_tournament',  { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple w3-amber">&#9998; Edytuj</button></a>
+                {% if is_granted('ROLE_USER') %}
+                    <a href = "{{ path('participate_in',  { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple w3-green">&#9998; Dołącz</button></a>
+                {% endif %}
             </td>
         </tr>
         {% endfor %}

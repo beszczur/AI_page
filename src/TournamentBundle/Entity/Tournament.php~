@@ -11,6 +11,7 @@ namespace TournamentBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -35,6 +36,7 @@ class Tournament
     protected $registrationEndDate;
     /**
      * @ORM\Column(type="date")
+     * @Assert\GreaterThanOrEqual("today")
      */
     protected $tournamentDate;
     /**
@@ -63,10 +65,14 @@ class Tournament
      */
     private $organizer;
     /**
-     * @ORM\OneToOne(targetEntity="TournamentBundle\Entity\Discipline")
+     * @ORM\ManyToOne(targetEntity="TournamentBundle\Entity\Discipline", inversedBy="tournaments")
      * @ORM\JoinColumn(name="discipline_id", referencedColumnName="id")
      */
     private $discipline;
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Participation", mappedBy="tournament")
+     */
+    private $participants;
 
     private $files;
 
@@ -112,7 +118,7 @@ class Tournament
      *
      * @return Tournament
      */
-    public function setTournamentDate(\day $tournamentDate)
+    public function setTournamentDate(\DateTime $tournamentDate = null)
     {
         $this->tournamentDate = $tournamentDate;
 
@@ -280,7 +286,7 @@ class Tournament
      *
      * @return Tournament
      */
-    public function setRegistrationEndDate($registrationEndDate)
+    public function setRegistrationEndDate(\DateTime $registrationEndDate = null)
     {
         $this->registrationEndDate = $registrationEndDate;
 
@@ -321,6 +327,15 @@ class Tournament
         return $this->discipline;
     }
 
+    public function getFiles()
+    {
+        return $this->files;
+    }
+
+    public function setFiles(array $files)
+    {
+        $this->files = $files;
+    }
 
 
 
@@ -347,13 +362,18 @@ class Tournament
     public function upload()
     {
         $this->paths = array();
-        foreach($this->files as $file)
+        if(!empty($this->files))
         {
-            $path = sha1(uniqid(mt_rand(), true)).'.'.$file->guessExtension();
-            array_push ($this->sponsorLogoPaths, $path);
-            $file->move($this->getUploadRootDir(), $path);
-
-            unset($file);
+            foreach($this->files as $file)
+            {
+                if($file != null)
+                {
+                    $path = sha1(uniqid(mt_rand(), true)).'.'.$file->guessExtension();
+                    array_push ($this->sponsorLogoPaths, $path);
+                    $file->move($this->getUploadRootDir(), $path);
+                }
+                unset($file);
+            }
         }
     }
 

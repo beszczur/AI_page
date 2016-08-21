@@ -15,11 +15,30 @@ class ParticipationController extends Controller
      */
     public function participateInAction($id, Request $request)
     {
-        $repository = $this->getDoctrine()
+        $participationRepository = $this->getDoctrine()
             ->getRepository('TournamentBundle:Participation');
+
+        $tournamentRepository = $this->getDoctrine()
+            ->getRepository('TournamentBundle:Tournament');
 
         $participation = new Participation();
         $form = $this->createForm('TournamentBundle\Form\Type\ParticipationType', $participation);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            $participation = $form->getData();
+            $participation->setTournament($tournamentRepository->find($id));
+            $participation->setUser($this->getUser());
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($participation);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('show_tournament',
+                array('id' => $id)));
+            /*Przekierowanie użytkownika po udanym zgłoszeniu formularza uniemożliwia użytkownikowi, by odświeżył i ponownie przesłał dane.*/
+        }
 
         return $this->render('TournamentBundle:Participation:participate_in.html.twig', array(
             'form' => $form->createView(),
