@@ -1,11 +1,17 @@
 # To get started with security, check out the documentation:
 # http://symfony.com/doc/current/book/security.html
 security:
+    encoders:
+            RegisterBundle\Entity\User: plaintext #bcrypt
 
     # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        in_memory:
-            memory: ~
+#        in_memory:
+#            memory: ~
+        our_db_provider:
+            entity:
+                class: RegisterBundle:User
+                property: email
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
@@ -17,8 +23,25 @@ security:
             anonymous: ~
             # activate different ways to authenticate
 
-            # http_basic: ~
+            http_basic: ~
             # http://symfony.com/doc/current/book/security.html#a-configuring-how-your-users-will-authenticate
 
-            # form_login: ~
+            provider: our_db_provider
+
             # http://symfony.com/doc/current/cookbook/security/form_login_setup.html
+            form_login:
+                login_path: /login
+                check_path: /login_check
+                csrf_token_generator: security.csrf.token_manager
+
+            logout:
+                path:   /logout
+                target: /
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/login, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/list, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/show, role: ROLE_USER }
+        - { path: ^/participate, role: ROLE_USER }

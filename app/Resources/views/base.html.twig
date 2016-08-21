@@ -30,9 +30,16 @@
         <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="{{ path('list_tournament') }}">Turnieje</a></li>
         <li class="navbarbtns"><a class="w3-hover-white w3-padding-16" href="#">####</a></li>
 
-        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="{{ path('register_page') }}">Rejestracja</a></li>
-        <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="#">Logowanie</a></li>
-        <li class="w3-amber w3-right" style="border-radius: 5px; height: 38px; margin: 9px 9px 5px 9px;">
+
+
+        {% if is_granted('ROLE_USER') %}
+            <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="{{ path('logout') }}">Wyloguj</a></li>
+        {% else %}
+            <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="{{ path('register_page') }}">Rejestracja</a></li>
+            <li class="navbarbtns w3-right"><a class="w3-hover-white w3-padding-16" href="{{ path('login') }}">Logowanie</a></li>
+        {% endif %}
+
+        <li class="navbarbtns w3-amber w3-right" style="border-radius: 5px; height: 38px; margin: 9px 9px 5px 9px;">
             <a class="w3-padding-10 w3-hover-green" href="{{ path('add_tournament') }}">+ Dodaj</a>
         </li>
     </ul>
