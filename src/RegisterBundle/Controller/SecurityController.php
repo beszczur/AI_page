@@ -15,16 +15,13 @@ class SecurityController extends Controller
     {
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        // pobranie błędu logowania, jeśli sie taki pojawił
         $error = $authenticationUtils->getLastAuthenticationError();
 
-        // nazwa użytkownika ostatnio wprowadzona przez aktualnego użytkownika
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render(
             'RegisterBundle:Security:login.html.twig',
             array(
-                // nazwa użytkownika ostatnio wprowadzona przez aktualnego użytkownika
                 'last_username' => $lastUsername,
                 'error'         => $error,
             )
