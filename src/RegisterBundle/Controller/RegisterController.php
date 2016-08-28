@@ -10,6 +10,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,12 +31,11 @@ class RegisterController extends Controller
             ->add('gender', ChoiceType::class, array(
                 'choices' => array('Female' => 'F', 'Male' => 'M')))
             ->add('email', EmailType::class)
-            ->add('password', TextType::class)
+            ->add('password', PasswordType::class)
             ->getForm();
 
         $form->handleRequest($request);
         if ($form->isValid()) {
-
 
             //adding user to database
             $user = $form->getData();

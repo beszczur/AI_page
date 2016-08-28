@@ -22,23 +22,41 @@ class TournamentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class)
-            ->add('registrationEndDate', DateType::class)
-            ->add('tournamentDate', DateTimeType::class, [
-                'placeholder' => [
-        'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-        'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
-        ]
+            ->add('name', TextType::class,[
+                'label' => "Nazwa",
             ])
-            ->add('city', TextType::class)
-            ->add('street', TextType::class)
-            ->add('description', TextareaType::class)
-            ->add('participantsLimit', IntegerType::class)
-            ->add('discipline', EntityType::class, array(
+            ->add('registrationEndDate', DateType::class, [
+                'label' => "Rejestracja do",
+                'placeholder' => [
+                    'year' => 'Rok', 'month' => 'Miesiąc', 'day' => 'Dzień',
+                ]
+            ])
+            ->add('tournamentDate', DateTimeType::class, [
+                'label' => "Data",
+                'placeholder' => [
+                    'year' => 'Rok', 'month' => 'Miesiąc', 'day' => 'Dzień',
+                    'hour' => 'Godzina', 'minute' => 'Minuty',
+                ]
+            ])
+            ->add('city', TextType::class,[
+                'label' => "Miasto",
+            ])
+            ->add('street', TextType::class, [
+                'label' => "Ulica",
+            ])
+            ->add('description', TextareaType::class, [
+                'label' => "Opis",
+            ])
+            ->add('participantsLimit', IntegerType::class,[
+                'label' => "Limit uczestników",
+            ])
+            ->add('discipline', EntityType::class, [
+                'label' => "Dyscyplina",
                 'class' => 'TournamentBundle:Discipline',
                 'choice_label' => 'name',
-            ))
+            ])
             ->add('files', FileType::class, array(
+                'label'         => "Loga sponsorów",
                 "attr"          => array("accept" => "image/*"),
                 "data_class"    => null,
                 "multiple"      => "multiple",

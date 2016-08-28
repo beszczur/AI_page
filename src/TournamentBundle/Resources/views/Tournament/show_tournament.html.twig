@@ -17,7 +17,7 @@
     {% endif %}
 </div>
 
-<div class="w3-main">
+<div class="w3-main"  ng-app="myApp" ng-controller="myController">
     <div class="w3-row w3-margin-bottom">
         <div class="w3-col l7" style="padding:3%; text-align: left">
             <table>
@@ -32,32 +32,71 @@
                 </tbody>
             </table>
         </div>
-        {% if tournament.sponsorLogoPaths != null %}
+
         <div class="w3-col l5" style="padding:3%;">
-            <div class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
-                <h5>Sponsorzy:</h5>
-                {% for path in tournament.sponsorLogoPaths %}
-                    <img src="/uploads/{{ path }}" height="150px"/>
-                {% endfor %}
-            </div>
+            <iframe
+                    frameborder="0"
+                    width = "100%"
+                    height = "300px"
+                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAWtgW_VmMX6ped_462ggkMjX2XzZuKd6M
+    &q={{ tournament.city }},{{ tournament.street }}">
+            </iframe>
         </div>
-        {% endif %}
+
+    </div>
+    <div id="buttons">
+    <button class="w3-btn w3-ripple" ng-click="participantsButton()">Uczestnicy</button>
+    <button class="w3-btn w3-ripple" ng-click="bracketButton()">Drabinka</button>
+    <button class="w3-btn w3-ripple" ng-click="sponsorButton()">Partnerzy</button>
+    <br> <br>
     </div>
 
-    <button class="w3-btn w3-ripple">Mapa</button>
-    <button class="w3-btn w3-ripple">Uczestnicy</button>
-    <button class="w3-btn w3-ripple">Drabinka</button>
-    <br> <br> <br>
-    <iframe ng-show="false"
-            frameborder="0"
-            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyAWtgW_VmMX6ped_462ggkMjX2XzZuKd6M
-    &q={{ tournament.city }},{{ tournament.street }}">
-    </iframe>
+    <div ng-show="showParticipants" class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
+        <h5>Uczestnicy:</h5>
+        {% for participation in participations %}
+            {{ participation.user.fullname }}<br>
+        {% endfor %}
+    </div>
 
-    {% for participation in participations %}
-        {{ participation.user.fullname }}<br>
-    {% endfor %}
+    <div ng-show="showBracket">
+        <h5>Tabelka:</h5>
+    </div>
+
+    <div ng-show="showSponsor" class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
+        <h5>Sponsorzy:</h5>
+        {% if tournament.sponsorLogoPaths != null %}
+            {% for path in tournament.sponsorLogoPaths %}
+                <img src="/uploads/{{ path }}" height="150px"/>
+            {% endfor %}
+        {% endif %}
+    </div>
 </div>
+
+    <script>
+        var app = angular.module("myApp", []);
+        app.controller('myController', function($scope) {
+            $scope.showSponsor = false;
+            $scope.showParticipants = false;
+            $scope.showBracket = false;
+            $scope.sponsorButton = function () {
+                $scope.showSponsor = !$scope.showSponsor;
+                $scope.showParticipants = false;
+                $scope.showBracket = false;
+                $location.hash('buttons');
+                $anchorScroll();
+            };
+            $scope.participantsButton = function () {
+                $scope.showSponsor = false;
+                $scope.showParticipants = !$scope.showParticipants;
+                $scope.showBracket = false;
+            };
+            $scope.bracketButton = function () {
+                $scope.showSponsor = false;
+                $scope.showParticipants = false;
+                $scope.showBracket = !$scope.showBracket;
+            };
+        });
+    </script>
 
 {% endblock %}
 
