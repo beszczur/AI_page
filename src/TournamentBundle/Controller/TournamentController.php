@@ -87,7 +87,7 @@ class TournamentController extends Controller
             ->getRepository('TournamentBundle:Tournament');
 
         $tournaments = $tournamentRepository->findAll();
-        $my_tournaments = array();
+        $my_tournaments = [];
         foreach ($tournaments as $tournament)
         {
             if($this->isOrganizer($tournament) || $this->isParticipant($tournament))

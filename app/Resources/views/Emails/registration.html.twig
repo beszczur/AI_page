@@ -1,12 +1,16 @@
-<h3>You did it! You registered!</h3>
-
-Hi {{ name }}! You're successfully registered.
-
-{# example, assuming you have a route named "login" #}
-To login, go to: <a href="{{ url('login') }}">...</a>.
-
-Thanks!
-
-{{ token }}
 {# Makes an absolute URL to the /images/logo.png file #}
-<img src="{{ absolute_url(asset('images/logo.gif')) }}">
+<img src="{{ absolute_url(asset('images/logo.jpg')) }}">
+
+<h3>Cześć {{ name }}!</h3>
+
+Pozostała tylko jenda rzecz, abyś mógł zaczać korzystać z naszej platofrmy.<br>
+Kliknij na poniższy link aby zweryfikować adres email.<br>
+
+<a href="{{ absolute_url("email/verify/#{ token }") }}">Zweryfikuj teraz</a><br>
+
+Jeśli nie rejestrowałeś się na naszej stonie, zignoruj tę wiadomość.<br>
+W razie problemów, skontaktuj się z naszym działem pomocy.<br>
+
+
+Pozdrawiamy,<br>
+Turniejowo.pl Team

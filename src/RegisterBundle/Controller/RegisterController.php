@@ -103,5 +103,14 @@ class RegisterController extends Controller
         ));
     }
 
+    /**
+     * @Route("/email/verify/{token}")
+     */
+    public function verifyEmailAction($token)
+    {
+        return $this->render('RegisterBundle:Register:email_verified.html.twig', array(
+        ));
+    }
+
 
 }

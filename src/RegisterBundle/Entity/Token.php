@@ -29,7 +29,7 @@ class Token
     protected $token;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      */
     protected $createdAt;
 

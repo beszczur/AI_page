@@ -5,6 +5,7 @@ namespace TournamentBundle\Form\Type;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -23,7 +24,12 @@ class TournamentType extends AbstractType
         $builder
             ->add('name', TextType::class)
             ->add('registrationEndDate', DateType::class)
-            ->add('tournamentDate', DateType::class)
+            ->add('tournamentDate', DateTimeType::class, [
+                'placeholder' => [
+        'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+        'hour' => 'Hour', 'minute' => 'Minute', 'second' => 'Second',
+        ]
+            ])
             ->add('city', TextType::class)
             ->add('street', TextType::class)
             ->add('description', TextareaType::class)

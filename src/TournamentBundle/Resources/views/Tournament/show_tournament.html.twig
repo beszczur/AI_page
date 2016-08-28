@@ -23,7 +23,7 @@
             <table>
                 <tbody>
                 <tr> <th style="width: 180px">Dyscyplina:</th>       <td>{{ tournament.discipline.name }}</td>       </tr>
-                <tr> <th>Data turnieju:</th>        <td>{{ tournament.tournamentDate |date ('d-m-Y') }}</td>            </tr>
+                <tr> <th>Data turnieju:</th>        <td>{{ tournament.tournamentDate |date ('d-m-Y  H:i') }}</td>            </tr>
                 <tr> <th>Limit uczestników: </th>   <td>{{ tournament.participantsLimit }}</td>     </tr>
                 <tr> <th>Rejestracja do:</th>       <td>{{ tournament.registrationEndDate|date ('d-m-Y') }}</td>        </tr>
                 <tr> <th>Miasto:</th>               <td>{{ tournament.city }}</td>                  </tr>

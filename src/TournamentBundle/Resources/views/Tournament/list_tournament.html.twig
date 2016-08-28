@@ -5,30 +5,50 @@
 {% block body %}
     <br>
     <h3>Nadchodzące turnieje</h3>
-    <table class="w3-table w3-bordered w3-striped" data-toggle="table" data-search="true">
-        <tr>
-            <th>Nazwa</th>
-            <th>Dyscyplina</th>
-            <th>Organizator</th>
-            <th>Data</th>
-            <th>Miejsce</th>
-            <th>Akcje</th>
-        </tr>
-        {% for tournament in tournaments %}
-        <tr>
-            <td>{{ tournament.name }}</td>
-            <td>{{ tournament.discipline.name }}</td>
-            <td>{{ tournament.organizer.fullname }}</td>
-            <td>{{ tournament.tournamentDate |date('d-m-Y') }}</td>
-            <td>{{ tournament.city }}, {{ tournament.street }}</td>
-            <td class="w3-right">
-                <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple">&#9998; Wyświetl</button></a>
-                {% if is_granted('ROLE_USER') %}
-                    <a href = "{{ path('participate_in',  { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple w3-green">&#9998; Dołącz</button></a>
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
+    <table id="tournamentTable" class="w3-table w3-bordered w3-striped">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Dyscyplina</th>
+                <th>Organizator</th>
+                <th>Data</th>
+                <th>Miejsce</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tournament in tournaments %}
+            <tr>
+                <td>{{ tournament.name }}</td>
+                <td>{{ tournament.discipline.name }}</td>
+                <td>{{ tournament.organizer.fullname }}</td>
+                <td>{{ tournament.tournamentDate |date('d-m-Y') }}</td>
+                <td>{{ tournament.city }}, {{ tournament.street }}</td>
+                <td class="w3-right">
+                    <a href = "{{ path('show_tournament', { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple">&#9998; Wyświetl</button></a>
+                    {% if is_granted('ROLE_USER') %}
+                        <a href = "{{ path('participate_in',  { 'id': tournament.id }) }}" ><button class="w3-btn w3-ripple w3-green">&#9998; Dołącz</button></a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-
+    <script>$(document).ready(function(){
+            $('#tournamentTable').DataTable({
+                responsive: true,
+                'aoColumns': [
+                    { bSearchable: true, bSortable: true },
+                    { bSearchable: true, bSortable: true },
+                    { bSearchable: true, bSortable: true },
+                    { bSearchable: true, bSortable: true },
+                    { bSearchable: true, bSortable: true },
+                    { bSearchable: false, bSortable: false },
+                ],
+                columnDefs: [
+                    { targets: [-1, -3], className: 'td' }
+                ]
+            } );
+        });
+    </script>
 {% endblock %}

@@ -29,7 +29,7 @@ class Tournament
      */
     protected $registrationEndDate;
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      * @Assert\GreaterThanOrEqual("today")
      */
     protected $tournamentDate;

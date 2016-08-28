@@ -11,7 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Table(name="participations")
  * @ORM\Entity
  * @UniqueEntity(
- *     fields={"tornament", "user"},
+ *     fields={"tournament", "user"},
  *     message="Uczestniczysz już w tym turnieju."
  * )
  */
