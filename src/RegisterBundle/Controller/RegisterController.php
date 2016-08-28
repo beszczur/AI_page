@@ -2,7 +2,9 @@
 
 namespace RegisterBundle\Controller;
 
+use RegisterBundle\Entity\Token;
 use RegisterBundle\Entity\User;
+use RegisterBundle\Services\TokenGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -34,6 +36,8 @@ class RegisterController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
 
+
+            //adding user to database
             $user = $form->getData();
 //            $encoder = $this->container->get('security.password_encoder');
 //            $encoded = $encoder->encodePassword($user, $user->getPassword());
@@ -48,6 +52,37 @@ class RegisterController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+
+            //adding token to database
+            $token = new Token();
+            $userRepository = $this->getDoctrine()->getRepository('RegisterBundle:User');
+            $token->setUser($userRepository->findOneBy(
+                    array('email' => $user->getEmail())));
+            $tokenGenerator = new TokenGenerator();
+            $token->setToken($tokenGenerator->generate());
+            $token->setCreatedAt(new \DateTime());
+
+            $emTokens = $this->getDoctrine()->getManager();
+            $emTokens->persist($token);
+            $emTokens->flush();
+
+
+            //sending email
+            $message = \Swift_Message::newInstance()
+                ->setSubject('Rejestracja przebiegła pomyślnie.')
+                ->setFrom('dearbeata@gmail.com')
+                ->setTo($user->getEmail())
+                ->setBody(
+                    $this->renderView(
+                        'Emails/registration.html.twig', [
+                            'name' => $user->getFirstname(),
+                            'token' =>$token->getToken(),
+                    ]
+                    ),
+                    'text/html'
+                )
+            ;
+            $this->get('mailer')->send($message);
 
             return $this->redirect($this->generateUrl('register_success',
                 array('user-email' => $user->getEmail())));

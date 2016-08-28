@@ -1,0 +1,35 @@
+<?php
+
+namespace RegisterBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ * @ORM\Table(name="tokens")
+ */
+class Token
+{
+    /**
+     * @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
+    protected $id;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="tokens")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
+     * @ORM\Column(type="string", length=60)
+     */
+    protected $token;
+
+    /**
+     * @ORM\Column(type="date")
+     */
+    protected $createdAt;
+}

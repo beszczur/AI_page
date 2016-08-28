@@ -1,14 +1,19 @@
 <?php
 
-namespace TournamentBundle\Entity;
+    namespace TournamentBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Participation
  *
  * @ORM\Table(name="participations")
  * @ORM\Entity
+ * @UniqueEntity(
+ *     fields={"tornament", "user"},
+ *     message="Uczestniczysz już w tym turnieju."
+ * )
  */
 class Participation
 {

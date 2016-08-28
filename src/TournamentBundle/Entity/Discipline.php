@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: beszczur
- * Date: 15.08.16
- * Time: 14:02
- */
 
 namespace TournamentBundle\Entity;
 
