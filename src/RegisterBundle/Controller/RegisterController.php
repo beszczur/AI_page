@@ -108,6 +108,27 @@ class RegisterController extends Controller
      */
     public function verifyEmailAction($token)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        $tokenFromRepo= $em->getRepository('RegisterBundle:Token')->findOneBy([
+            'token' => $token,
+        ]);
+        if (!$tokenFromRepo) {
+            return $this->render('RegisterBundle:Register:email_verification_failed_incorrect_token.html.twig', array(
+            ));
+        }
+
+        $user = $em->getRepository('RegisterBundle:User')->find($tokenFromRepo->getUser()->getId());
+
+        if (!$user) {
+            return $this->render('RegisterBundle:Register:email_verification_failed_incorrect_token.html.twig', array(
+            ));
+        }
+
+        $user->setOptions($user->getOptions()|1); //static::User::emailVerifiedOption
+        $em->remove($tokenFromRepo);
+        var_dump($em->flush());
+
         return $this->render('RegisterBundle:Register:email_verified.html.twig', array(
         ));
     }

@@ -13,11 +13,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * @ORM\Entity
  * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="email_uniq", columns={"email"})})
+ * @ORM\Entity(repositoryClass="RegisterBundle\Repository\UserRepository")
  */
 class User implements UserInterface, \Serializable
 {
+    public static $emailVerifiedOption = 1;
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id

@@ -1,6 +1,6 @@
 {% extends "::base.html.twig" %}
 
-{% block title %}RegisterBundle:Security:login{% endblock %}
+{% block title %}Logowanie{% endblock %}
 
 {% block body %}
 
@@ -20,6 +20,8 @@
         </div>
 
         <input type="submit" class="w3-btn w3-ripple w3-green" value="Login" />
+        <a href = "{{ path('forgotPassword') }}" ><button type="button" class="w3-btn w3-ripple">Zapomniałem hasła</button></a>
     </form>
+
 
 {% endblock %}
