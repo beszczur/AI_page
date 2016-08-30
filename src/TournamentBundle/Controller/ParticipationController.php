@@ -31,13 +31,23 @@ class ParticipationController extends Controller
             $participation->setTournament($tournamentRepository->find($id));
             $participation->setUser($this->getUser());
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($participation);
-            $em->flush();
+            $registeredNumber = count($participationRepository->findBy(array('tournament' => $id)));
 
-            return $this->redirect($this->generateUrl('show_tournament',
-                array('id' => $id)));
-            /*Przekierowanie użytkownika po udanym zgłoszeniu formularza uniemożliwia użytkownikowi, by odświeżył i ponownie przesłał dane.*/
+            if ($registeredNumber < $tournamentRepository->find($id)->getParticipantsLimit())
+            {
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($participation);
+                $em->flush();
+
+                return $this->redirect($this->generateUrl('show_tournament',
+                    array('id' => $id)));
+                /*Przekierowanie użytkownika po udanym zgłoszeniu formularza uniemożliwia użytkownikowi, by odświeżył i ponownie przesłał dane.*/
+
+            }
+            else
+            {
+                return $this->render('TournamentBundle:Errors:limit_exceed.html.twig');
+            }
         }
 
         return $this->render('TournamentBundle:Participation:participate_in.html.twig', array(

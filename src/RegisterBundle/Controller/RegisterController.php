@@ -125,7 +125,7 @@ class RegisterController extends Controller
             ));
         }
 
-        $user->setOptions($user->getOptions()|1); //static::User::emailVerifiedOption
+        $user->setOptions($user->getOptions()|User::$EMAIL_VERIFIED_OPTION);
         $em->remove($tokenFromRepo);
         var_dump($em->flush());
 

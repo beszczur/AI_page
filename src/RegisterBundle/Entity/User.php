@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class User implements UserInterface, \Serializable
 {
-    public static $emailVerifiedOption = 1;
+    public static $EMAIL_VERIFIED_OPTION = 1;
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id

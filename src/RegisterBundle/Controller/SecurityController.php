@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,7 +48,7 @@ class SecurityController extends Controller
      */
     public function resetPasswordEmailSendAction()
     {
-        return $this->render('RegisterBundle:Security:reset_password.html.twig');
+        return $this->render('RegisterBundle:Security:reset_password_email_send.html.twig');
     }
 
     /**
@@ -115,10 +117,70 @@ class SecurityController extends Controller
     /**
      * @Route("/resetPassword/{token}")
      */
-    public function resetPasswordAction($token)
+    public function resetPasswordAction($token, Request $request)
     {
-        return $this->render('RegisterBundle:Security:reset_password.html.twig', array(
-        ));
+        $tokenEM = $this->getDoctrine()->getManager();
+        $tokenFromRepo = $tokenEM->getRepository('RegisterBundle:Token')->findOneBy(["token" => $token]);
+        if($tokenFromRepo == null)
+        {
+            return $this->render('RegisterBundle:Register:email_verification_failed_incorrect_token.html.twig');
+        }
+
+        $form = $this->createFormBuilder()
+            ->add('password', PasswordType::class,[
+                'label' => "Hasło",
+            ])
+            ->add('repeatPassword', PasswordType::class,[
+                'label' => "Powtórz hasło",
+            ])
+            ->getForm();
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+
+            $passwords= $form->getData();
+
+            if($passwords["password"] != $passwords["repeatPassword"])
+            {
+                $form->get('password')->addError(new FormError('Podane hasła nie są identyczne'));
+                return $this->render('RegisterBundle:Security:reset_password.html.twig', [
+                        'form' => $form->createView(),
+                    ]
+                );
+            }
+            else
+            {
+                $tokenEM = $this->getDoctrine()->getManager();
+                $tokenFromRepo = $tokenEM->getRepository('RegisterBundle:Token')->findOneBy(["token" => $token]);
+                if($tokenFromRepo == null)
+                {
+                    return $this->render('RegisterBundle:Register:email_verification_failed_incorrect_token.html.twig');
+                }
+                else
+                {
+                    $userEM = $this->getDoctrine()->getManager();
+                    $userFromRepo = $userEM->getRepository('RegisterBundle:User')->find($tokenFromRepo->getUser()->getId());
+
+                    $factory = $this->get('security.encoder_factory');
+                    $encoder = $factory->getEncoder($userFromRepo);
+                    $password = $encoder->encodePassword($passwords["password"], $userFromRepo->getSalt());
+                    $userFromRepo->setPassword($password);
+
+                    $userEM->flush();
+
+                    $tokenEM->remove($tokenFromRepo);
+                    $tokenEM->flush();
+
+                    return $this->render('RegisterBundle:Security:password_was_changed.html.twig');
+
+                }
+            }
+
+        }
+            return $this->render('RegisterBundle:Security:reset_password.html.twig', [
+                'form' => $form->createView(),
+            ]
+        );
     }
 
 }
