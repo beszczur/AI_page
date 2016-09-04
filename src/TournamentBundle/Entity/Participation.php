@@ -10,11 +10,10 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="participations")
  * @ORM\Entity
- * @UniqueEntity(
- *     fields={"tournament", "user"},
- *     message="Uczestniczysz już w tym turnieju."
- * )
+ * @UniqueEntity( fields={"tournament", "user"}, message="Uczestniczysz już w tym turnieju.")
  */
+
+// *
 class Participation
 {
     /**
@@ -29,7 +28,7 @@ class Participation
     /**
      * @var string
      *
-     * @ORM\Column(name="license", type="string", length=50, unique=true)
+     * @ORM\Column(name="license", type="string", length=50)
      */
     private $license;
 

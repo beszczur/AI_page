@@ -23,16 +23,11 @@ class SecurityController extends Controller
     {
         $authenticationUtils = $this->get('security.authentication_utils');
 
-        $error = $authenticationUtils->getLastAuthenticationError();
-
-        $lastUsername = $authenticationUtils->getLastUsername();
-
         return $this->render(
-            'RegisterBundle:Security:login.html.twig',
-            array(
-                'last_username' => $lastUsername,
-                'error'         => $error,
-            )
+            'RegisterBundle:Security:login.html.twig', [
+                'last_username' => $authenticationUtils->getLastUsername(),
+                'error'         => $authenticationUtils->getLastAuthenticationError(),
+            ]
         );
     }
 
@@ -41,6 +36,7 @@ class SecurityController extends Controller
      */
     public function loginCheckAction()
     {
+        var_dump("Duren");
     }
 
     /**
