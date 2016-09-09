@@ -6,6 +6,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use TournamentBundle\Entity\Game;
 use TournamentBundle\Entity\Tournament;
 
 class TournamentController extends Controller
@@ -23,10 +25,31 @@ class TournamentController extends Controller
             ->getRepository('TournamentBundle:Participation');
         $participations = $participationRepository->findBy(array('tournament' => $id));
 
+        $gamesRepository = $this->getDoctrine()->getRepository('TournamentBundle:Game');
+        $gamesResults = [];
+        $count = $tournament->getPowerOfParticipants();
+        $round = 1;
+        while($count >= 1){
+            $roundGames = [];
+            for($i = 0; $i < $count; $i++)
+            {
+                $game = $gamesRepository->findOneBy(array('tournament' => $tournament, 'round' => $round, 'position' => $i));
+                if($game && $game->getResult1() !== null && $game->getResult2() !== null)
+                    $roundGames[] = ($game->getResult1() ? [1,0] : [0,1]);
+                else
+                    $roundGames[] = [0,0];
+            }
+            $gamesResults[] = $roundGames;
+            $round += 1;
+            $count /= 2;
+        }
+        $gamesResults = json_encode($gamesResults);
+
         return $this->render('TournamentBundle:Tournament:show_tournament.html.twig', [
             'tournament'     => $tournament,
             'participations' => $participations,
             'user_id'        => $this->getUserId(),
+            'gamesResults'   => $gamesResults,
         ]);
     }
 
@@ -133,6 +156,44 @@ class TournamentController extends Controller
         return $this->render('TournamentBundle:Tournament:add_tournament.html.twig', array(
             'form' => $form->createView(),
         ));
+    }
+
+    /**
+     * @Route("/{id}/generate_matches", name="tournament_generate_matches")
+     */
+    public function generateMatchesAction(Request $request, $id)
+    {
+        $tournamentRepository = $this->getDoctrine()->getRepository('TournamentBundle:Tournament');
+        $tournament = $tournamentRepository->find($id);
+
+        $participations = $tournament->getParticipants();
+        $count = 2;
+        while($count < count($participations))
+            $count *= 2;
+        $count /= 2;
+        echo $count.PHP_EOL;
+        $games = [];
+        for($i = 0; $i < $count; $i++)
+        {
+            $games[] = new Game();
+            $games[$i]->setTournament($tournament);
+            $games[$i]->setRound(1);
+            $games[$i]->setPosition($i);
+        }
+        $participationsCount = count($participations);
+        for($i = 0; $i < $participationsCount; $i++)
+        {
+            if($i < $count)
+                $games[$i]->setPlayer1($participations[$i]->getUser());
+            else
+                $games[$i%$count]->setPlayer2($participations[$i]->getUser());
+        }
+        $em = $this->getDoctrine()->getEntityManager();
+        for($i = 0; $i < $count; $i++){
+            $em->persist($games[$i]);
+        }
+        $em->flush();
+        return new Response('OK');
     }
 
     private function getUserId()

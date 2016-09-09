@@ -4,6 +4,13 @@ table{
 form label{
     color: #4CAF50;     /* w3-green */
 }
+
+.bracket .label{
+    color: #000000;
+    text-align: left;
+    margin: 7px 2px 7px 2px;
+}
+
 .navbarbtns{
     width: 170px;
     text-align: center;

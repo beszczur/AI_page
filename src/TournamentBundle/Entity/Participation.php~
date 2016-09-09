@@ -1,15 +1,18 @@
 <?php
 
-namespace TournamentBundle\Entity;
+    namespace TournamentBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Participation
  *
- * @ORM\Table(name="participations")
+ * @ORM\Table(name="participations",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="participation_index", columns={"tournament_id", "user_id"})})
  * @ORM\Entity
  */
+
 class Participation
 {
     /**
@@ -24,7 +27,7 @@ class Participation
     /**
      * @var string
      *
-     * @ORM\Column(name="license", type="string", length=50, unique=true)
+     * @ORM\Column(name="license", type="string", length=50)
      */
     private $license;
 
@@ -46,4 +49,110 @@ class Participation
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      */
     private $user;
+
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set license
+     *
+     * @param string $license
+     *
+     * @return Participation
+     */
+    public function setLicense($license)
+    {
+        $this->license = $license;
+
+        return $this;
+    }
+
+    /**
+     * Get license
+     *
+     * @return string
+     */
+    public function getLicense()
+    {
+        return $this->license;
+    }
+
+    /**
+     * Set ranking
+     *
+     * @param integer $ranking
+     *
+     * @return Participation
+     */
+    public function setRanking($ranking)
+    {
+        $this->ranking = $ranking;
+
+        return $this;
+    }
+
+    /**
+     * Get ranking
+     *
+     * @return integer
+     */
+    public function getRanking()
+    {
+        return $this->ranking;
+    }
+
+    /**
+     * Set tournament
+     *
+     * @param \TournamentBundle\Entity\Tournament $tournament
+     *
+     * @return Participation
+     */
+    public function setTournament(\TournamentBundle\Entity\Tournament $tournament = null)
+    {
+        $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * Get tournament
+     *
+     * @return \TournamentBundle\Entity\Tournament
+     */
+    public function getTournament()
+    {
+        return $this->tournament;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \RegisterBundle\Entity\User $user
+     *
+     * @return Participation
+     */
+    public function setUser(\RegisterBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \RegisterBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

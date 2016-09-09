@@ -68,6 +68,12 @@ class Tournament
      */
     private $participants;
 
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Game", mappedBy="tournament")
+     * @ORM\OrderBy({"round"="asc", "position"="desc"})
+     */
+    private $games;
+
     private $files;
 
 
@@ -442,5 +448,53 @@ class Tournament
     public function getParticipants()
     {
         return $this->participants;
+    }
+
+    /**
+     * Add game
+     *
+     * @param \TournamentBundle\Entity\Game $game
+     *
+     * @return Tournament
+     */
+    public function addGame(\TournamentBundle\Entity\Game $game)
+    {
+        $this->games[] = $game;
+
+        return $this;
+    }
+
+    /**
+     * Remove game
+     *
+     * @param \TournamentBundle\Entity\Game $game
+     */
+    public function removeGame(\TournamentBundle\Entity\Game $game)
+    {
+        $this->games->removeElement($game);
+    }
+
+    /**
+     * Get games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGames()
+    {
+        return $this->games;
+    }
+
+    public function countParticipants()
+    {
+        return count($this->participants);
+    }
+
+    public function getPowerOfParticipants()
+    {
+        $count = 2;
+        while($count < $this->countParticipants())
+            $count *= 2;
+        $count /= 2;
+        return $count;
     }
 }

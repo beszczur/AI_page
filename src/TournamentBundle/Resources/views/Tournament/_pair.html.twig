@@ -1,0 +1,5 @@
+[
+{% for game in tournament.games if game.round == 1 %}
+    ["{{ game.player1.fullname }}", "{{ game.player2.fullname }}"],
+{% endfor %}
+]

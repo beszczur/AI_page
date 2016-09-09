@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: beszczur
- * Date: 13.08.16
- * Time: 23:23
- */
 
 namespace TournamentBundle\Entity;
 
@@ -35,7 +29,7 @@ class Tournament
      */
     protected $registrationEndDate;
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="datetime")
      * @Assert\GreaterThanOrEqual("today")
      */
     protected $tournamentDate;
@@ -73,6 +67,12 @@ class Tournament
      * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Participation", mappedBy="tournament")
      */
     private $participants;
+
+    /**
+     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Game", mappedBy="tournament")
+     * @ORM\OrderBy({"round"="asc", "position"="desc"})
+     */
+    private $games;
 
     private $files;
 
@@ -415,4 +415,86 @@ class Tournament
         return 'uploads';
     }
 
+
+    /**
+     * Add participant
+     *
+     * @param \TournamentBundle\Entity\Participation $participant
+     *
+     * @return Tournament
+     */
+    public function addParticipant(\TournamentBundle\Entity\Participation $participant)
+    {
+        $this->participants[] = $participant;
+
+        return $this;
+    }
+
+    /**
+     * Remove participant
+     *
+     * @param \TournamentBundle\Entity\Participation $participant
+     */
+    public function removeParticipant(\TournamentBundle\Entity\Participation $participant)
+    {
+        $this->participants->removeElement($participant);
+    }
+
+    /**
+     * Get participants
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getParticipants()
+    {
+        return $this->participants;
+    }
+
+    /**
+     * Add game
+     *
+     * @param \TournamentBundle\Entity\Game $game
+     *
+     * @return Tournament
+     */
+    public function addGame(\TournamentBundle\Entity\Game $game)
+    {
+        $this->games[] = $game;
+
+        return $this;
+    }
+
+    /**
+     * Remove game
+     *
+     * @param \TournamentBundle\Entity\Game $game
+     */
+    public function removeGame(\TournamentBundle\Entity\Game $game)
+    {
+        $this->games->removeElement($game);
+    }
+
+    /**
+     * Get games
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGames()
+    {
+        return $this->games;
+    }
+
+    public function countParticipants()
+    {
+        return count($this->participants);
+    }
+
+    public function getPowerOfParticipants()
+    {
+        $count = 2;
+        while($count < $this->countParticipants())
+            $count *= 2;
+        $count /= 2;
+        return $count;
+    }
 }

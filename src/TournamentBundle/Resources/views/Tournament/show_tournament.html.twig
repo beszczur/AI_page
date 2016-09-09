@@ -53,13 +53,27 @@
 
     <div ng-show="showParticipants" class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
         <h5>Uczestnicy:</h5>
+        <table>
+        <thead>
+            <th>Uczestnik</th>
+            <th>Numer licencji</th>
+            <th>Pozycja w rankingu</th>
+        </thead>
+        <tbody>
         {% for participation in participations %}
-            {{ participation.user.fullname }}<br>
+            <tr>
+                <td>{{ participation.user.fullname }}</td>
+                <td>{{ participation.license }}</td>
+                <td>{{ participation.ranking }}</td>
+            </tr>
         {% endfor %}
+        </tbody>
+        </table>
     </div>
 
     <div ng-show="showBracket">
         <h5>Tabelka:</h5>
+        <div class="bracket"></div>
     </div>
 
     <div ng-show="showSponsor" class="w3-example w3-margin-0 w3-hide-small" style="padding-bottom: 20px;">
@@ -96,6 +110,17 @@
                 $scope.showBracket = !$scope.showBracket;
             };
         });
+
+        var minimalData = {
+            teams : {% include 'TournamentBundle:Tournament:_pair.html.twig' %},
+            results : {{ gamesResults }}
+        };
+
+        $(function() {
+            $(".bracket").bracket({
+                init: minimalData })
+        });
+
     </script>
 
 {% endblock %}

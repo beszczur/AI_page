@@ -2,18 +2,17 @@
 
     namespace TournamentBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * Participation
  *
- * @ORM\Table(name="participations")
+ * @ORM\Table(name="participations",
+ *     uniqueConstraints={@ORM\UniqueConstraint(name="participation_index", columns={"tournament_id", "user_id"})})
  * @ORM\Entity
- * @UniqueEntity( fields={"tournament", "user"}, message="Uczestniczysz już w tym turnieju.")
  */
 
-// *
 class Participation
 {
     /**
