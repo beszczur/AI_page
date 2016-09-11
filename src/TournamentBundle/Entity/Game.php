@@ -5,10 +5,8 @@ namespace TournamentBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Game
- *
- * @ORM\Table(name="games")
  * @ORM\Entity
+ * @ORM\Table(name="games")
  */
 class Game
 {
@@ -19,61 +17,61 @@ class Game
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="result1", type="integer", nullable=true)
      */
-    private $result1;
+    protected $result1;
 
     /**
      * @var bool
      *
      * @ORM\Column(name="result2", type="integer", nullable=true)
      */
-    private $result2;
+    protected $result2;
 
     /**
      * @ORM\ManyToOne(targetEntity="TournamentBundle\Entity\Tournament", inversedBy="games")
      * @ORM\JoinColumn(name="tournament_id", referencedColumnName="id")
      */
-    private $tournament;
+    protected $tournament;
 
     /**
      * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games")
      * @ORM\JoinColumn(name="player1_id", referencedColumnName="id")
      */
-    private $player1;
+    protected $player1;
 
     /**
      * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games")
      * @ORM\JoinColumn(name="player2_id", referencedColumnName="id")
      */
-    private $player2;
+    protected $player2;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer")
      */
-    private $round;
+    protected $round;
 
     /**
      * @var integer
      *
      * @ORM\Column(type="integer")
      */
-    private $position;
+    protected $position;
 
     /**
      * @var boolean
      *
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(type="boolean", nullable=true)
      * 1 - means that result was deleted because of conflict in players votes
      */
-    private $option;
+    protected $options;
 
 
     /**
@@ -183,27 +181,27 @@ class Game
     }
 
     /**
-     * Set option
+     * Set options
      *
-     * @param boolean $option
+     * @param boolean $options
      *
      * @return Game
      */
-    public function setOption($option = null)
+    public function setOptions($options)
     {
-        $this->option = $option;
+        $this->options = $options;
 
         return $this;
     }
 
     /**
-     * Get option
+     * Get options
      *
      * @return boolean
      */
-    public function getOption()
+    public function getOptions()
     {
-        return $this->option;
+        return $this->options;
     }
 
     /**

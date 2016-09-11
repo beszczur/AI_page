@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use TournamentBundle\Entity\Game;
 use TournamentBundle\Entity\Tournament;
+use TournamentBundle\Entity\Participation;
 
 class TournamentController extends Controller
 {
@@ -171,7 +172,17 @@ class TournamentController extends Controller
         $tournamentRepository = $this->getDoctrine()->getRepository('TournamentBundle:Tournament');
         $tournament = $tournamentRepository->find($id);
 
-        $participations = $tournament->getParticipants();
+        $participationEM = $this->getDoctrine()->getManager();
+
+        $query = $participationEM->createQuery(
+            'SELECT p
+             FROM TournamentBundle:Participation p
+             WHERE p.tournament = :tournamentId
+             ORDER BY p.ranking ASC'
+        )->setParameter('tournamentId', $id);
+
+        $participations = $query->getResult();
+
         $count = 2;
         while($count < $tournament->countParticipants())
             $count *= 2;
@@ -198,7 +209,7 @@ class TournamentController extends Controller
             $em->persist($games[$i]);
         }
         $em->flush();
-        return new Response('OK');
+        return $this->redirectToRoute('show_tournament', ['id' => $id]);
     }
 
     private function getUserId()

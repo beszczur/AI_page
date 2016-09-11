@@ -2,8 +2,13 @@
 
 namespace TournamentBundle\Controller;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use TournamentBundle\Entity\Game;
 use TournamentBundle\Entity\Tournament;
 use RegisterBundle\Entity\User;
@@ -28,8 +33,8 @@ class GameController extends Controller
         $games = $query->getResult();
 
         return $this->render('TournamentBundle:Game:list_games.html.twig', array(
-            "games" => $games,
-            "user_id"     => $this->getUser()->getId(),
+            "games"     => $games,
+            "user_id"   => $this->getUser()->getId(),
         ));
     }
 
@@ -41,33 +46,29 @@ class GameController extends Controller
         $gameEM = $this->getDoctrine()->getManager();
         $game = $gameEM->getRepository('TournamentBundle:Game')->find($id);
 
-        if($game->getPlayer1() == $this->getUser())
-        {
-            if($game->getResult2() == $result)
-            {
+        if($game->getPlayer1() == $this->getUser()) {
+            if ($game->getResult2() == $result) {
                 $query = $gameEM->createQuery(
                     'UPDATE TournamentBundle:Game g
-                     SET g.result1 = null, g.result2 = null
+                     SET g.result1 = null, g.result2 = null, g.options =1
                      WHERE g.id = :gameId'
                 )
                     ->setParameter('gameId', $id);
-
                 $games = $query->execute();
-            }
-            else
-            {
+            } else {
                 $game->setResult1((int)$result);
-                if($game->getResult2() != null)
-                    $game->setOption(false);
+                if ($game->getResult2() != null)
+                    $game->setOptions(false);
                 $gameEM->flush();
-                //TODo: add new row if it is possible
+                //add new row if it is possible
                 $game = $gameEM->getRepository('TournamentBundle:Game')->find($id);
-                if($game->getPosition()%2 == 0)
+                if ($game->getPosition() % 2 == 0)
+                ///górny w parze
                 {
                     $game2 = $gameEM->getRepository('TournamentBundle:Game')->findOneBy([
                         'tournament' => $game->getTournament(),
-                        'position'   => $game->getPosition()+1,
-                        'round'      => $game->getRound(),
+                        'position' => $game->getPosition() + 1,
+                        'round' => $game->getRound(),
                     ]);
                     $scores[] = $game->getResult1();
                     $scores[] = $game->getResult2();
@@ -76,66 +77,203 @@ class GameController extends Controller
 
                     $passed = true;
                     foreach ($scores as $score)
-                        if($score == null)
+                        if ($score == null)
                             $passed = false;
 
-                    if($passed)
-                    {
-//                        $newGame = new Game();
-//                        $newGame->setTournament($game->getTournament());
-//                        if ($scores[0] == 1)
-//                            $newGame->setPlayer1($game->getPlayer1());
-//                        else
-//                            $newGame->setPlayer1($game->getPlayer2());
-//
-//                        if ($scores[2] == 1)
-//                            $newGame->setPlayer2($game2->getPlayer1());
-//                        else
-//                            $newGame->setPlayer2($game2->getPlayer2());
-//                        $newGame->setResult1(0);
-//                        $newGame->setResult2(0);
-//                        $newGame->setRound($game->getRound()+1);
-//                        $newGame->setPosition($this->possition[$game->getPosition()]);
-//                        $newGame->setOption(false);
-//
-//                        //$em = $this->getDoctrine()->getManager();
-//                        $gameEM->persist($newGame);
-//                        //var_dump($newGame);
-//                        $gameEM->flush();
-//                        var_dump('Ble bele bel');
+                    if ($passed) {
+                        $newGame = new Game();
+                        $newGame->setTournament($game->getTournament());
+                        if ($scores[0] == 1)
+                            $newGame->setPlayer1($game->getPlayer1());
+                        else
+                            $newGame->setPlayer1($game->getPlayer2());
 
-//                        $gameEM = $this->getDoctrine()->getConnection();
-//
-//                        $query = "INSERT TournamentBundle:Game (`tournament_id`, `player1_id`, `player2_id`, `result1`, `result2`, `round`, `position`, `option`)  VALUES (1,12,31,null,null,2,0,0)";
-//                        //->setParameter(['userId', $this->getUser()->getId()]);
-//
-//                        //$games = $query->getResult();
-//                        $stmt = $gameEM->prepare($query);
-//                        $stmt->execute();
+                        if ($scores[2] == 1)
+                            $newGame->setPlayer2($game2->getPlayer1());
+                        else
+                            $newGame->setPlayer2($game2->getPlayer2());
+                        $newGame->setRound($game->getRound() + 1);
+                        $newGame->setPosition($this->possition[$game->getPosition()]);
+                        $newGame->setOptions(false);
 
-//                        $db = $this->em->getConnection();
-//                        $query = "INSERT INTO table2 (myfield) SELECT table1.myfield FROM table1 WHERE table1.id < 1000";
-//                        $stmt = $db->prepare($query);
-//                        $params = array();
-//                        $stmt->execute($params);
+                        $gameEM->persist($newGame);
+                        $gameEM->flush();
                     }
-                }
-                else
+                } else //dolny w parze
                 {
+                    $game2 = $gameEM->getRepository('TournamentBundle:Game')->findOneBy([
+                        'tournament' => $game->getTournament(),
+                        'position' => $game->getPosition() - 1,
+                        'round' => $game->getRound(),
+                    ]);
+                    $scores[] = $game2->getResult1();
+                    $scores[] = $game2->getResult2();
+                    $scores[] = $game->getResult1();
+                    $scores[] = $game->getResult2();
 
+                    $passed = true;
+                    foreach ($scores as $score)
+                        if ($score == null)
+                            $passed = false;
+
+                    if ($passed) {
+                        $newGame = new Game();
+                        $newGame->setTournament($game->getTournament());
+                        if ($scores[0] == 1)
+                            $newGame->setPlayer1($game->getPlayer1());
+                        else
+                            $newGame->setPlayer1($game->getPlayer2());
+
+                        if ($scores[2] == 1)
+                            $newGame->setPlayer2($game2->getPlayer1());
+                        else
+                            $newGame->setPlayer2($game2->getPlayer2());
+                        $newGame->setRound($game->getRound() + 1);
+                        $newGame->setPosition($this->possition[$game->getPosition()]);
+                        $newGame->setOptions(false);
+
+                        $gameEM->persist($newGame);
+                        $gameEM->flush();
+                    }
                 }
             }
         }
         elseif ($game->getPlayer2() == $this->getUser())
         {
-                //TODO:
+            if ($game->getResult1() == $result) {
+                $query = $gameEM->createQuery(
+                    'UPDATE TournamentBundle:Game g
+                     SET g.result1 = null, g.result2 = null, g.options =1
+                     WHERE g.id = :gameId'
+                )
+                    ->setParameter('gameId', $id);
+                $games = $query->execute();
+            } else {
+                $game->setResult2((int)$result);
+                if ($game->getResult1() != null)
+                    $game->setOptions(false);
+                $gameEM->flush();
+                //add new row if it is possible
+                $game = $gameEM->getRepository('TournamentBundle:Game')->find($id);
+                if ($game->getPosition() % 2 == 0)
+                    ///górny w parze
+                {
+                    $game2 = $gameEM->getRepository('TournamentBundle:Game')->findOneBy([
+                        'tournament' => $game->getTournament(),
+                        'position' => $game->getPosition() + 1,
+                        'round' => $game->getRound(),
+                    ]);
+                    $scores[] = $game->getResult1();
+                    $scores[] = $game->getResult2();
+                    $scores[] = $game2->getResult1();
+                    $scores[] = $game2->getResult2();
+
+                    $passed = true;
+                    foreach ($scores as $score)
+                        if ($score == null)
+                            $passed = false;
+
+                    if ($passed) {
+                        $newGame = new Game();
+                        $newGame->setTournament($game->getTournament());
+                        if ($scores[0] == 1)
+                            $newGame->setPlayer1($game->getPlayer1());
+                        else
+                            $newGame->setPlayer1($game->getPlayer2());
+
+                        if ($scores[2] == 1)
+                            $newGame->setPlayer2($game2->getPlayer1());
+                        else
+                            $newGame->setPlayer2($game2->getPlayer2());
+                        $newGame->setRound($game->getRound() + 1);
+                        $newGame->setPosition($this->possition[$game->getPosition()]);
+                        $newGame->setOptions(false);
+
+                        $gameEM->persist($newGame);
+                        $gameEM->flush();
+                    }
+                } else //dolny w parze
+                {
+                    $game2 = $gameEM->getRepository('TournamentBundle:Game')->findOneBy([
+                        'tournament' => $game->getTournament(),
+                        'position' => $game->getPosition() - 1,
+                        'round' => $game->getRound(),
+                    ]);
+                    $scores[] = $game2->getResult1();
+                    $scores[] = $game2->getResult2();
+                    $scores[] = $game->getResult1();
+                    $scores[] = $game->getResult2();
+
+                    $passed = true;
+                    foreach ($scores as $score)
+                        if ($score == null)
+                            $passed = false;
+
+                    if ($passed) {
+                        $newGame = new Game();
+                        $newGame->setTournament($game->getTournament());
+                        if ($scores[0] == 1)
+                            $newGame->setPlayer1($game->getPlayer1());
+                        else
+                            $newGame->setPlayer1($game->getPlayer2());
+
+                        if ($scores[2] == 1)
+                            $newGame->setPlayer2($game2->getPlayer1());
+                        else
+                            $newGame->setPlayer2($game2->getPlayer2());
+                        $newGame->setRound($game->getRound() + 1);
+                        $newGame->setPosition($this->possition[$game->getPosition()]);
+                        $newGame->setOptions(false);
+
+                        $gameEM->persist($newGame);
+                        $gameEM->flush();
+                    }
+                }
+            }
         }
-
-
-
-
 
         return $this->redirect($this->generateUrl('list_games'));
     }
 
+//     /**
+//      * @Route("/games/new", name="score")
+//      * @Method({"GET", "POST"})
+//      */
+//    public function newGameAction(Request $request)
+//    {
+//        $game = new Game();
+//        $form = $this->createFormBuilder($game)
+//            ->add('tournament', EntityType::class, [
+//                'label' => "Turniej",
+//                'class' => 'TournamentBundle:Tournament',
+//                'choice_label' => 'name',
+//            ])
+//            ->add('player1', EntityType::class, [
+//                'label' => "Zawodnik 1",
+//                'class' => 'RegisterBundle:User',
+//                'choice_label' => 'fullname',
+//            ])
+//            ->add('player2', EntityType::class, [
+//                'label' => "Zawodnik 2",
+//                'class' => 'RegisterBundle:User',
+//                'choice_label' => 'fullname',
+//            ])
+//            ->add('round',  IntegerType::class, ['label' => "runda"])
+//            ->add('position',IntegerType::class, ['label' => "pozycja"])
+//            ->getForm();
+//
+//        $form->handleRequest($request);
+//        if ($form->isValid()) {
+//
+//            $game = $form->getData();
+//            $game->setOptions(0);
+//
+//            $em = $this->getDoctrine()->getManager();
+//            $em->persist($game);
+//            $em->flush();
+//        }
+//        return $this->render('TournamentBundle:Game:add.html.twig', [
+//            'form' => $form->createView(),
+//        ]);
+//    }
 }

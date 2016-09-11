@@ -26,7 +26,13 @@
                         {{ game.player1.fullname }}
                     {% endif %}
                 </td>
-                <td style="vertical-align: middle">{{ game.player2.fullname }}</td>
+                <td style="vertical-align: middle">
+                    {% if game.player2.id == user_id %}
+                        <b>{{ game.player2.fullname }}</b>
+                    {% else %}
+                        {{ game.player2.fullname }}
+                    {% endif %}
+                </td>
                 <td style="vertical-align: middle">
                     {% if (game.result1 == null and game.player1.id == user_id) or (game.result2 == null and game.player2.id == user_id) %}
                         <a href = "{{ path('score', { 'id': game.id, 'result': 1  }) }}" ><button class="w3-btn w3-green">Wygrana</button></a>
@@ -38,7 +44,7 @@
                     {% endif %}
                 </td>
                 <td style="vertical-align: middle">
-                    {% if game.option == 1 %}
+                    {% if game.options == 1 %}
                         <div class="exclamation-mark-small-red" data-toggle="tooltip" data-placement="bottom"
                              title="Zawodnicy wprowadzili sprzeczne wyniki. Wymagane jest ponowne wprowadzenie wyników">
                             !
