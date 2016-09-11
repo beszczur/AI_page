@@ -1,0 +1,58 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}XXX{% endblock %}
+
+{% block body %}
+    <br>
+    <h3>Pojedynki</h3>
+    <table id="gamesTable" class="w3-table w3-bordered w3-striped">
+        <thead>
+        <tr>
+            <th>Turniej</th>
+            <th>Zawodnik 1</th>
+            <th>Zawodnik 2</th>
+            <th>Wynik</th>
+            <th style="width: 40px"></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for game in games %}
+            <tr>
+                <td style="vertical-align: middle">{{ game.tournament.name }}</td>
+                <td style="vertical-align: middle">
+                    {% if game.player1.id == user_id %}
+                        <b>{{ game.player1.fullname }}</b>
+                    {% else %}
+                        {{ game.player1.fullname }}
+                    {% endif %}
+                </td>
+                <td style="vertical-align: middle">{{ game.player2.fullname }}</td>
+                <td style="vertical-align: middle">
+                    {% if (game.result1 == null and game.player1.id == user_id) or (game.result2 == null and game.player2.id == user_id) %}
+                        <a href = "{{ path('score', { 'id': game.id, 'result': 1  }) }}" ><button class="w3-btn w3-green">Wygrana</button></a>
+                        <a href = "{{ path('score', { 'id': game.id, 'result': -1  }) }}" ><button class="w3-btn w3-red">Przegrana</button></a>
+                    {% elseif (game.result1 == 1 and game.player1.id == user_id) or (game.result2 == 1 and game.player2.id == user_id) %}
+                        <div class="w3-text-green" style="max-width: 100px;">Wygrana</div>
+                    {% else %}
+                        <div class="w3-text-red" style="max-width: 100px;">Przegrana</div>
+                    {% endif %}
+                </td>
+                <td style="vertical-align: middle">
+                    {% if game.option == 1 %}
+                        <div class="exclamation-mark-small-red" data-toggle="tooltip" data-placement="bottom"
+                             title="Zawodnicy wprowadzili sprzeczne wyniki. Wymagane jest ponowne wprowadzenie wyników">
+                            !
+                        </div>
+                    {% endif %}
+                    {% if game.result1 + game.result2 != 0 %}
+                        <div class="exclamation-mark-small-yellow" data-toggle="tooltip" data-placement="bottom"
+                             title="Wynik tej rozgrywki nie został jeszcze potwierdzony przez jednego z zawodników.">
+                            !
+                        </div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

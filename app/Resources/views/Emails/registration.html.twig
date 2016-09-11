@@ -1,9 +1,6 @@
-{# Makes an absolute URL to the /images/logo.png file #}
-<img src="{{ absolute_url(asset('images/logo.jpg')) }}">
-
 <h3>Cześć {{ name }}!</h3>
 
-Pozostała tylko jenda rzecz, abyś mógł zaczać korzystać z naszej platofrmy.<br>
+Pozostała tylko jedna rzecz, abyś mógł zacząć korzystać z naszej platofrmy.<br>
 Kliknij na poniższy link aby zweryfikować adres email.<br>
 
 <a href="{{ absolute_url("email/verify/#{ token }") }}">Zweryfikuj teraz</a><br>

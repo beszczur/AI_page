@@ -29,6 +29,32 @@ form label{
     font-weight: bold;
 }
 
+.exclamation-mark-small-yellow{
+    font-size: 15px;
+    float: left;
+    color:  white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: #ffc107; /* w3-amber */;
+    display: inline;
+    text-align: center;
+    font-weight: bold;
+}
+
+.exclamation-mark-small-red{
+    font-size: 15px;
+    float: left;
+    color:  white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background: #f44336; /* w3-red */;
+    display: inline;
+    text-align: center;
+    font-weight: bold;
+}
+
 .error-message{
     font-size : 20px;
     padding-left: 20px;

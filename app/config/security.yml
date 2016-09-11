@@ -45,3 +45,4 @@ security:
         - { path: ^/list, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/show, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/participate, role: ROLE_USER }
+        - { path: ^/games, role: ROLE_USER }

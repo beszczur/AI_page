@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Game
  *
- * @ORM\Table(name="game")
+ * @ORM\Table(name="games")
  * @ORM\Entity
  */
 class Game
@@ -24,14 +24,14 @@ class Game
     /**
      * @var bool
      *
-     * @ORM\Column(name="result1", type="boolean", nullable=true)
+     * @ORM\Column(name="result1", type="integer", nullable=true)
      */
     private $result1;
 
     /**
      * @var bool
      *
-     * @ORM\Column(name="result2", type="boolean", nullable=true)
+     * @ORM\Column(name="result2", type="integer", nullable=true)
      */
     private $result2;
 
@@ -42,13 +42,13 @@ class Game
     private $tournament;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games1")
+     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games")
      * @ORM\JoinColumn(name="player1_id", referencedColumnName="id")
      */
     private $player1;
 
     /**
-     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games2")
+     * @ORM\ManyToOne(targetEntity="RegisterBundle\Entity\User", inversedBy="games")
      * @ORM\JoinColumn(name="player2_id", referencedColumnName="id")
      */
     private $player2;
@@ -67,11 +67,19 @@ class Game
      */
     private $position;
 
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean")
+     * 1 - means that result was deleted because of conflict in players votes
+     */
+    private $option;
+
 
     /**
      * Get id
      *
-     * @return int
+     * @return integer
      */
     public function getId()
     {
@@ -81,7 +89,7 @@ class Game
     /**
      * Set result1
      *
-     * @param boolean $result1
+     * @param integer $result1
      *
      * @return Game
      */
@@ -95,7 +103,7 @@ class Game
     /**
      * Get result1
      *
-     * @return bool
+     * @return integer
      */
     public function getResult1()
     {
@@ -105,7 +113,7 @@ class Game
     /**
      * Set result2
      *
-     * @param boolean $result2
+     * @param integer $result2
      *
      * @return Game
      */
@@ -119,83 +127,11 @@ class Game
     /**
      * Get result2
      *
-     * @return bool
+     * @return integer
      */
     public function getResult2()
     {
         return $this->result2;
-    }
-
-    /**
-     * Set tournament
-     *
-     * @param \AppBundle\Entity\Tournament $tournament
-     *
-     * @return Game
-     */
-    public function setTournament(\TournamentBundle\Entity\Tournament $tournament = null)
-    {
-        $this->tournament = $tournament;
-
-        return $this;
-    }
-
-    /**
-     * Get tournament
-     *
-     * @return \AppBundle\Entity\Tournament
-     */
-    public function getTournament()
-    {
-        return $this->tournament;
-    }
-
-    /**
-     * Set player1
-     *
-     * @param \AppBundle\Entity\User $player1
-     *
-     * @return Game
-     */
-    public function setPlayer1(\RegisterBundle\Entity\User $player1 = null)
-    {
-        $this->player1 = $player1;
-
-        return $this;
-    }
-
-    /**
-     * Get player1
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getPlayer1()
-    {
-        return $this->player1;
-    }
-
-    /**
-     * Set player2
-     *
-     * @param \AppBundle\Entity\User $player2
-     *
-     * @return Game
-     */
-    public function setPlayer2(\RegisterBundle\Entity\User $player2 = null)
-    {
-        $this->player2 = $player2;
-
-        return $this;
-    }
-
-    /**
-     * Get player2
-     *
-     * @return \AppBundle\Entity\User
-     */
-    public function getPlayer2()
-    {
-        return $this->player2;
     }
 
     /**
@@ -244,5 +180,101 @@ class Game
     public function getPosition()
     {
         return $this->position;
+    }
+
+    /**
+     * Set option
+     *
+     * @param boolean $option
+     *
+     * @return Game
+     */
+    public function setOption($option = null)
+    {
+        $this->option = $option;
+
+        return $this;
+    }
+
+    /**
+     * Get option
+     *
+     * @return boolean
+     */
+    public function getOption()
+    {
+        return $this->option;
+    }
+
+    /**
+     * Set tournament
+     *
+     * @param \TournamentBundle\Entity\Tournament $tournament
+     *
+     * @return Game
+     */
+    public function setTournament(\TournamentBundle\Entity\Tournament $tournament = null)
+    {
+        $this->tournament = $tournament;
+
+        return $this;
+    }
+
+    /**
+     * Get tournament
+     *
+     * @return \TournamentBundle\Entity\Tournament
+     */
+    public function getTournament()
+    {
+        return $this->tournament;
+    }
+
+    /**
+     * Set player1
+     *
+     * @param \RegisterBundle\Entity\User $player1
+     *
+     * @return Game
+     */
+    public function setPlayer1(\RegisterBundle\Entity\User $player1 = null)
+    {
+        $this->player1 = $player1;
+
+        return $this;
+    }
+
+    /**
+     * Get player1
+     *
+     * @return \RegisterBundle\Entity\User
+     */
+    public function getPlayer1()
+    {
+        return $this->player1;
+    }
+
+    /**
+     * Set player2
+     *
+     * @param \RegisterBundle\Entity\User $player2
+     *
+     * @return Game
+     */
+    public function setPlayer2(\RegisterBundle\Entity\User $player2 = null)
+    {
+        $this->player2 = $player2;
+
+        return $this;
+    }
+
+    /**
+     * Get player2
+     *
+     * @return \RegisterBundle\Entity\User
+     */
+    public function getPlayer2()
+    {
+        return $this->player2;
     }
 }

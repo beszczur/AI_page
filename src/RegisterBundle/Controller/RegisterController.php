@@ -5,6 +5,7 @@ namespace RegisterBundle\Controller;
 use RegisterBundle\Entity\Token;
 use RegisterBundle\Entity\User;
 use RegisterBundle\Services\TokenGenerator;
+use Swift_Image;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -26,12 +27,14 @@ class RegisterController extends Controller
     {
         $user = new User();
         $form = $this->createFormBuilder($user)
-            ->add('firstname', TextType::class)
-            ->add('surname', TextType::class)
-            ->add('gender', ChoiceType::class, array(
-                'choices' => array('Female' => 'F', 'Male' => 'M')))
-            ->add('email', EmailType::class)
-            ->add('password', PasswordType::class)
+            ->add('firstname', TextType::class, ['label' => "Imię"])
+            ->add('surname', TextType::class, ['label' => "Nazwisko"])
+            ->add('gender', ChoiceType::class, [
+                'choices'   => ['Kobieta' => 'F', 'Mężczyzna' => 'M'],
+                'label'     => "Płeć",
+            ])
+            ->add('email', EmailType::class, ['label' => "Email"])
+            ->add('password', PasswordType::class, ['label' => "Hasło"])
             ->getForm();
 
         $form->handleRequest($request);
@@ -39,6 +42,9 @@ class RegisterController extends Controller
 
             //adding user to database
             $user = $form->getData();
+            $checkEmail = $this->getDoctrine()->getRepository('RegisterBundle:User')->findBy(['email'=> $user->getEmail()]);
+            if (!empty($checkEmail))
+                return $this->redirect($this->generateUrl('duplicated_email'));
 //            $encoder = $this->container->get('security.password_encoder');
 //            $encoded = $encoder->encodePassword($user, $user->getPassword());
 //            $user->setPassword($encoded);
@@ -82,6 +88,7 @@ class RegisterController extends Controller
                     'text/html'
                 )
             ;
+            //$message->embed(Swift_Image::fromPath('images/logo.jpg'));
             $this->get('mailer')->send($message);
 
             return $this->redirect($this->generateUrl('register_success',
@@ -89,9 +96,9 @@ class RegisterController extends Controller
             /*Przekierowanie użytkownika po udanym zgłoszeniu formularza uniemożliwia użytkownikowi, by odświeżył i ponownie przesłał dane.*/
         }
 
-        return $this->render('RegisterBundle:Register:register.html.twig', array(
+        return $this->render('RegisterBundle:Register:register.html.twig', [
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     /**

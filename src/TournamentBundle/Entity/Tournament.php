@@ -64,7 +64,7 @@ class Tournament
      */
     private $discipline;
     /**
-     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Participation", mappedBy="tournament")
+     * @ORM\OneToMany(targetEntity="TournamentBundle\Entity\Participation", mappedBy="tournament", cascade={"persist", "remove"})
      */
     private $participants;
 

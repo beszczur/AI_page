@@ -33,9 +33,13 @@ class TournamentController extends Controller
             $roundGames = [];
             for($i = 0; $i < $count; $i++)
             {
-                $game = $gamesRepository->findOneBy(array('tournament' => $tournament, 'round' => $round, 'position' => $i));
+                $game = $gamesRepository->findOneBy([
+                    'tournament'    => $tournament,
+                    'round'         => $round,
+                    'position'      => $i
+                ]);
                 if($game && $game->getResult1() !== null && $game->getResult2() !== null)
-                    $roundGames[] = ($game->getResult1() ? [1,0] : [0,1]);
+                    $roundGames[] = ($game->getResult1()==1 ? [1,0] : [0,1]);
                 else
                     $roundGames[] = [0,0];
             }
@@ -81,8 +85,9 @@ class TournamentController extends Controller
         }
 
         return $this->render('TournamentBundle:Tournament:edit_tournament.html.twig', array(
-            'edit_form' => $form->createView(),
-            'id'        => $tournament->getId(),
+            'edit_form'     => $form->createView(),
+            'delete_form'   => $this->createDeleteForm($tournament)->createView(),
+            'id'            => $tournament->getId(),
         ));
     }
 
@@ -168,7 +173,7 @@ class TournamentController extends Controller
 
         $participations = $tournament->getParticipants();
         $count = 2;
-        while($count < count($participations))
+        while($count < $tournament->countParticipants())
             $count *= 2;
         $count /= 2;
         echo $count.PHP_EOL;
@@ -180,8 +185,8 @@ class TournamentController extends Controller
             $games[$i]->setRound(1);
             $games[$i]->setPosition($i);
         }
-        $participationsCount = count($participations);
-        for($i = 0; $i < $participationsCount; $i++)
+
+        for($i = 0; $i < $tournament->countParticipants(); $i++)
         {
             if($i < $count)
                 $games[$i]->setPlayer1($participations[$i]->getUser());
@@ -231,6 +236,42 @@ class TournamentController extends Controller
         ]);
 
         return $paticipations != null;
+    }
+
+    /**
+     * Creates a form to delete a Tournament entity.
+     *
+     * @param Tournament $tournament The Tournament entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Tournament $tournament)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('tournament_delete', ['id' => $tournament->getId()]))
+            ->setMethod('DELETE')
+            ->getForm()
+            ;
+    }
+
+    /**
+     * Deletes a Tournament entity.
+     *
+     * @Route("edit/{id}", name="tournament_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Tournament $tournament)
+    {
+        $form = $this->createDeleteForm($tournament);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($tournament);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('my_tournaments');
     }
 }
 

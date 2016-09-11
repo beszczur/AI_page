@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use TournamentBundle\Entity\Participation;
+use TournamentBundle\Entity\Tournament;
 
 class ParticipationController extends Controller
 {
@@ -22,11 +23,17 @@ class ParticipationController extends Controller
         $participation = new Participation();
         $form = $this->createForm('TournamentBundle\Form\Type\ParticipationType', $participation);
 
-        if ($this->isUserRegisteredOnTournament($id, $participationRepository))
+        $tournament = $tournamentRepository->find($id);
+
+        if($tournament == null)
+        {
+            return $this->redirect($this->generateUrl('tournament_not_exists'));
+        }
+        else if ($this->isUserRegisteredOnTournament($id, $participationRepository))
         {
             return $this->redirect($this->generateUrl('more_than_one_registration'));
         }
-        else if ($this->isLimitExceed($id, $participationRepository, $tournamentRepository))
+        else if ($this->isLimitExceed($id, $participationRepository, $tournament))
         {
             return $this->redirect($this->generateUrl('limit_exceed'));
         }
@@ -34,18 +41,22 @@ class ParticipationController extends Controller
         $form->handleRequest($request);
         if ($form->isValid()) {
 
-            if ($this->isUserRegisteredOnTournament($id, $participationRepository))
+            if($tournament == null)
+            {
+                return $this->redirect($this->generateUrl('tournament_not_exists'));
+            }
+            else if ($this->isUserRegisteredOnTournament($id, $participationRepository))
             {
                 return $this->redirect($this->generateUrl('more_than_one_registration'));
             }
-            else if ($this->isLimitExceed($id, $participationRepository, $tournamentRepository))
+            else if ($this->isLimitExceed($id, $participationRepository, $tournament))
             {
                 return $this->redirect($this->generateUrl('limit_exceed'));
             }
             else
             {
                 $participation = $form->getData();
-                $participation->setTournament($tournamentRepository->find($id));
+                $participation->setTournament($tournament);
                 $participation->setUser($this->getUser());
                 $em = $this->getDoctrine()->getManager();
                 $em->persist($participation);
@@ -88,8 +99,8 @@ class ParticipationController extends Controller
      * @param $tournamentRepository
      * @return bool
      */
-    private function isLimitExceed($id, $participationRepository, $tournamentRepository)
+    private function isLimitExceed($id, $participationRepository, $tournament)
     {
-        return count($participationRepository->findBy(array('tournament' => $id))) >= $tournamentRepository->find($id)->getParticipantsLimit();
+        return $tournament->countParticipants() >= $tournament->getParticipantsLimit();
     }
 }

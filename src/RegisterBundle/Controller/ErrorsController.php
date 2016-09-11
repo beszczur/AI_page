@@ -29,4 +29,26 @@ class ErrorsController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/errors/duplicatedEmail", name="duplicated_email")
+     */
+    public function duplicatedEmailAction()
+    {
+        return $this->render('ErrorPage.html.twig', [
+            "page_title"        => "Email istnieje już w bazie",
+            "error_message"     => "Użytkownik o podanym adresie email istnieje już w bazie danych. ",
+        ]);
+    }
+
+    /**
+     * @Route("/errors/tournamentNotExists", name="tournament_not_exists")
+     */
+    public function tournamentNotExistsAction()
+    {
+        return $this->render('ErrorPage.html.twig', [
+            "page_title"        => "Turniej nie istnieje",
+            "error_message"     => "Turniej nie istnieje. ;( ",
+        ]);
+    }
+
 }

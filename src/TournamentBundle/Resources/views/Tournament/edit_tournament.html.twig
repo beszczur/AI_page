@@ -8,7 +8,13 @@
     <h3>Edytuj turniej</h3>
     {{ form_widget(edit_form) }}
     <input type="submit" class="w3-btn w3-ripple w3-amber" value="Edytuj" />
-    <a href="{{ path('show_tournament', { 'id': id }) }}" class="w3-btn w3-ripple">Wróć do wydarzenia</a>
+
+    {{ form_start(delete_form) }}
+        <input onclick="return confirm('Czy na pewno chcesz usunąć ten turniej?\nZmiana ta jest nieodwracalna.')"
+               type="submit" class="w3-btn w3-ripple w3-red" value="Usuń">
+        <a href="{{ path('show_tournament', { 'id': id }) }}" class="w3-btn w3-ripple">Wróć do wydarzenia</a>
+    {{ form_end(delete_form) }}
+
     {{ form_end(edit_form) }}
 
 {% endblock %}
