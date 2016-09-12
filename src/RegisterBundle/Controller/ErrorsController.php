@@ -51,4 +51,15 @@ class ErrorsController extends Controller
         ]);
     }
 
+    /**
+     * @Route("/errors/powerOfTwoRequired", name="power_of_two_required")
+     */
+    public function powerOfTwoRequiredAction()
+    {
+        return $this->render('ErrorPage.html.twig', [
+            "page_title"        => "Potęga dwójki wymagana",
+            "error_message"     => "Libcza zgłoszonych powinna być potęgą dwójki ",
+        ]);
+    }
+
 }

@@ -70,35 +70,39 @@ class GameController extends Controller
                         'position' => $game->getPosition() + 1,
                         'round' => $game->getRound(),
                     ]);
-                    $scores[] = $game->getResult1();
-                    $scores[] = $game->getResult2();
-                    $scores[] = $game2->getResult1();
-                    $scores[] = $game2->getResult2();
+                    if($game2 !=null)
+                    {
 
-                    $passed = true;
-                    foreach ($scores as $score)
-                        if ($score == null)
-                            $passed = false;
+                        $scores[] = $game->getResult1();
+                        $scores[] = $game->getResult2();
+                        $scores[] = $game2->getResult1();
+                        $scores[] = $game2->getResult2();
 
-                    if ($passed) {
-                        $newGame = new Game();
-                        $newGame->setTournament($game->getTournament());
-                        if ($scores[0] == 1)
-                            $newGame->setPlayer1($game->getPlayer1());
-                        else
-                            $newGame->setPlayer1($game->getPlayer2());
+                        $passed = true;
+                        foreach ($scores as $score)
+                            if ($score == null)
+                                $passed = false;
 
-                        if ($scores[2] == 1)
-                            $newGame->setPlayer2($game2->getPlayer1());
-                        else
-                            $newGame->setPlayer2($game2->getPlayer2());
-                        $newGame->setRound($game->getRound() + 1);
-                        $newGame->setPosition($this->possition[$game->getPosition()]);
-                        $newGame->setOptions(false);
+                        if ($passed) {
+                            $newGame = new Game();
+                            $newGame->setTournament($game->getTournament());
+                            if ($scores[0] == 1)
+                                $newGame->setPlayer1($game->getPlayer1());
+                            else
+                                $newGame->setPlayer1($game->getPlayer2());
 
-                        $gameEM->persist($newGame);
-                        $gameEM->flush();
-                    }
+                            if ($scores[2] == 1)
+                                $newGame->setPlayer2($game2->getPlayer1());
+                            else
+                                $newGame->setPlayer2($game2->getPlayer2());
+                            $newGame->setRound($game->getRound() + 1);
+                            $newGame->setPosition($this->possition[$game->getPosition()]);
+                            $newGame->setOptions(false);
+
+                            $gameEM->persist($newGame);
+                            $gameEM->flush();
+                        }
+                }
                 } else //dolny w parze
                 {
                     $game2 = $gameEM->getRepository('TournamentBundle:Game')->findOneBy([
@@ -106,34 +110,37 @@ class GameController extends Controller
                         'position' => $game->getPosition() - 1,
                         'round' => $game->getRound(),
                     ]);
-                    $scores[] = $game2->getResult1();
-                    $scores[] = $game2->getResult2();
-                    $scores[] = $game->getResult1();
-                    $scores[] = $game->getResult2();
 
-                    $passed = true;
-                    foreach ($scores as $score)
-                        if ($score == null)
-                            $passed = false;
+                    if($game2 != null) {
+                        $scores[] = $game2->getResult1();
+                        $scores[] = $game2->getResult2();
+                        $scores[] = $game->getResult1();
+                        $scores[] = $game->getResult2();
 
-                    if ($passed) {
-                        $newGame = new Game();
-                        $newGame->setTournament($game->getTournament());
-                        if ($scores[0] == 1)
-                            $newGame->setPlayer1($game->getPlayer1());
-                        else
-                            $newGame->setPlayer1($game->getPlayer2());
+                        $passed = true;
+                        foreach ($scores as $score)
+                            if ($score == null)
+                                $passed = false;
 
-                        if ($scores[2] == 1)
-                            $newGame->setPlayer2($game2->getPlayer1());
-                        else
-                            $newGame->setPlayer2($game2->getPlayer2());
-                        $newGame->setRound($game->getRound() + 1);
-                        $newGame->setPosition($this->possition[$game->getPosition()]);
-                        $newGame->setOptions(false);
+                        if ($passed) {
+                            $newGame = new Game();
+                            $newGame->setTournament($game->getTournament());
+                            if ($scores[0] == 1)
+                                $newGame->setPlayer1($game->getPlayer1());
+                            else
+                                $newGame->setPlayer1($game->getPlayer2());
 
-                        $gameEM->persist($newGame);
-                        $gameEM->flush();
+                            if ($scores[2] == 1)
+                                $newGame->setPlayer2($game2->getPlayer1());
+                            else
+                                $newGame->setPlayer2($game2->getPlayer2());
+                            $newGame->setRound($game->getRound() + 1);
+                            $newGame->setPosition($this->possition[$game->getPosition()]);
+                            $newGame->setOptions(false);
+
+                            $gameEM->persist($newGame);
+                            $gameEM->flush();
+                        }
                     }
                 }
             }
@@ -163,34 +170,36 @@ class GameController extends Controller
                         'position' => $game->getPosition() + 1,
                         'round' => $game->getRound(),
                     ]);
-                    $scores[] = $game->getResult1();
-                    $scores[] = $game->getResult2();
-                    $scores[] = $game2->getResult1();
-                    $scores[] = $game2->getResult2();
+                    if($game2 != null) {
+                        $scores[] = $game->getResult1();
+                        $scores[] = $game->getResult2();
+                        $scores[] = $game2->getResult1();
+                        $scores[] = $game2->getResult2();
 
-                    $passed = true;
-                    foreach ($scores as $score)
-                        if ($score == null)
-                            $passed = false;
+                        $passed = true;
+                        foreach ($scores as $score)
+                            if ($score == null)
+                                $passed = false;
 
-                    if ($passed) {
-                        $newGame = new Game();
-                        $newGame->setTournament($game->getTournament());
-                        if ($scores[0] == 1)
-                            $newGame->setPlayer1($game->getPlayer1());
-                        else
-                            $newGame->setPlayer1($game->getPlayer2());
+                        if ($passed) {
+                            $newGame = new Game();
+                            $newGame->setTournament($game->getTournament());
+                            if ($scores[0] == 1)
+                                $newGame->setPlayer1($game->getPlayer1());
+                            else
+                                $newGame->setPlayer1($game->getPlayer2());
 
-                        if ($scores[2] == 1)
-                            $newGame->setPlayer2($game2->getPlayer1());
-                        else
-                            $newGame->setPlayer2($game2->getPlayer2());
-                        $newGame->setRound($game->getRound() + 1);
-                        $newGame->setPosition($this->possition[$game->getPosition()]);
-                        $newGame->setOptions(false);
+                            if ($scores[2] == 1)
+                                $newGame->setPlayer2($game2->getPlayer1());
+                            else
+                                $newGame->setPlayer2($game2->getPlayer2());
+                            $newGame->setRound($game->getRound() + 1);
+                            $newGame->setPosition($this->possition[$game->getPosition()]);
+                            $newGame->setOptions(false);
 
-                        $gameEM->persist($newGame);
-                        $gameEM->flush();
+                            $gameEM->persist($newGame);
+                            $gameEM->flush();
+                        }
                     }
                 } else //dolny w parze
                 {
@@ -199,34 +208,37 @@ class GameController extends Controller
                         'position' => $game->getPosition() - 1,
                         'round' => $game->getRound(),
                     ]);
-                    $scores[] = $game2->getResult1();
-                    $scores[] = $game2->getResult2();
-                    $scores[] = $game->getResult1();
-                    $scores[] = $game->getResult2();
 
-                    $passed = true;
-                    foreach ($scores as $score)
-                        if ($score == null)
-                            $passed = false;
+                    if($game2 != null) {
+                        $scores[] = $game2->getResult1();
+                        $scores[] = $game2->getResult2();
+                        $scores[] = $game->getResult1();
+                        $scores[] = $game->getResult2();
 
-                    if ($passed) {
-                        $newGame = new Game();
-                        $newGame->setTournament($game->getTournament());
-                        if ($scores[0] == 1)
-                            $newGame->setPlayer1($game->getPlayer1());
-                        else
-                            $newGame->setPlayer1($game->getPlayer2());
+                        $passed = true;
+                        foreach ($scores as $score)
+                            if ($score == null)
+                                $passed = false;
 
-                        if ($scores[2] == 1)
-                            $newGame->setPlayer2($game2->getPlayer1());
-                        else
-                            $newGame->setPlayer2($game2->getPlayer2());
-                        $newGame->setRound($game->getRound() + 1);
-                        $newGame->setPosition($this->possition[$game->getPosition()]);
-                        $newGame->setOptions(false);
+                        if ($passed) {
+                            $newGame = new Game();
+                            $newGame->setTournament($game->getTournament());
+                            if ($scores[0] == 1)
+                                $newGame->setPlayer1($game->getPlayer1());
+                            else
+                                $newGame->setPlayer1($game->getPlayer2());
 
-                        $gameEM->persist($newGame);
-                        $gameEM->flush();
+                            if ($scores[2] == 1)
+                                $newGame->setPlayer2($game2->getPlayer1());
+                            else
+                                $newGame->setPlayer2($game2->getPlayer2());
+                            $newGame->setRound($game->getRound() + 1);
+                            $newGame->setPosition($this->possition[$game->getPosition()]);
+                            $newGame->setOptions(false);
+
+                            $gameEM->persist($newGame);
+                            $gameEM->flush();
+                        }
                     }
                 }
             }

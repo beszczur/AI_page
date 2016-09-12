@@ -169,8 +169,13 @@ class TournamentController extends Controller
      */
     public function generateMatchesAction(Request $request, $id)
     {
+        $powersOfTwo = [2,4,8,16,32];
+
         $tournamentRepository = $this->getDoctrine()->getRepository('TournamentBundle:Tournament');
         $tournament = $tournamentRepository->find($id);
+
+        if(!in_array($tournament->countParticipants(),$powersOfTwo))
+            return $this->redirect($this->generateUrl('power_of_two_required'));
 
         $participationEM = $this->getDoctrine()->getManager();
 
